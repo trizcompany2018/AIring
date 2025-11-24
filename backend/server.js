@@ -24,6 +24,12 @@ app.use((req, _res, next) => {
   next();
 });
 
+app.get("/health", (req, res) => {
+  res.json({ ok: true });
+});
+
+
+
 // 파일 업로드 설정 (PDF 10MB 제한)
 const upload = multer({
   storage: multer.memoryStorage(),
