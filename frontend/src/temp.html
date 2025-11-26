@@ -1,0 +1,272 @@
+<style>/* RESET */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Pretendard", sans-serif;
+  background: linear-gradient(180deg, #7df18e, #00c66c);
+  color: #111;
+  font-weight: 400; /* 기본 regular */
+}
+
+/* LAYOUT */
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 40px;
+}
+
+.header-logo img {
+  height: 28px;
+}
+
+.header-icon {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.header-icon img {
+  width: 32px;
+  height: 32px;
+}
+
+/* MAIN box */
+.main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px 48px;
+}
+
+.box {
+  width: 100%;
+  max-width: 960px;
+  background: #fff;
+  border-radius: 20px;
+  padding: 80px 40px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+}
+
+.box-header {
+  margin-bottom: 32px;
+}
+
+.page-title {
+  font-size: 36px;
+  font-weight: 700; /* Bold */
+  margin-bottom: 8px;
+}
+
+.page-subtitle {
+  font-size: 14px;
+  font-weight: 400;
+  color: #4b5563;
+}
+
+/* FORM */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-label {
+  font-size: 13px;
+  font-weight: 700; /* Bold (Medium 없음) */
+  color: #374151;
+}
+
+/* INPUT / SELECT */
+.form-control {
+  height: 48px;
+  padding: 0 14px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.form-control:focus {
+  border-color: #22c55e;
+}
+
+/* UPLOAD BOX */
+.upload-box {
+  border-radius: 16px;
+  border: 2px dashed #22c55e;
+  background: #eafff1;
+  text-align: center;
+  padding: 24px;
+}
+
+.upload-icon {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 8px;
+}
+
+.upload-text {
+  font-size: 14px;
+  font-weight: 400;
+  color: #047857;
+}
+
+/* BUTTONS */
+.form-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn {
+  flex: 1;
+  height: 48px;
+  border-radius: 999px;
+  border: none;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+/* Primary → Bold */
+.btn-primary {
+  background: #10b981;
+  color: #fff;
+  font-weight: 700; /* Bold */
+}
+
+/* Secondary → Regular */
+.btn-secondary {
+  background: #e5e7eb;
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+/* FOOTER */
+.footer {
+  text-align: center;
+  padding: 16px 0 24px;
+  font-size: 12px;
+  font-weight: 400;
+  color: #f9fafb;
+}
+
+</style>
+
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>라이브 방송 대본 생성</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <div class="page">
+
+        <!-- 헤더 -->
+        <header class="header">
+            <a href="/" class="header-logo">
+                <img src="airing_logo.png" alt="AIring" />
+            </a>
+
+            <button class="header-icon" type="button">
+                <img src="logout_icon.png" alt="로그아웃" />
+            </button>
+        </header>
+
+        <!-- 메인 -->
+        <main class="main">
+            <section class="box">
+                <header class="box-header">
+                    <h1 class="page-title">라이브 방송 대본 생성</h1>
+                    <p class="page-subtitle">
+                        제품 정보가 포함된 PDF를 업로드하면 AI가 방송 대본을 자동으로 생성해 드립니다.
+                    </p>
+                </header>
+
+                <form class="form">
+                    <!-- 강조 포인트 -->
+                    <div class="form-group">
+                        <label class="form-label" for="highlight">강조 포인트</label>
+                        <input id="highlight" type="text" class="form-control"
+                            placeholder="예시 : 라이브 환경 설명, 사용 편의성 강조" />
+                    </div>
+
+                    <!-- 사용 지양 언어 -->
+                    <div class="form-group">
+                        <label class="form-label" for="avoid-language">사용 지양 언어</label>
+                        <input id="avoid-language" type="text" class="form-control"
+                            placeholder="예시 : 과장 표현, 학위 오해 소지 단어 등" />
+                    </div>
+
+                    <!-- 방송톤 / 사용 모델 -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="tone">방송톤</label>
+                            <select id="tone" class="form-control">
+                                <option>기본</option>
+                                <option>간결</option>
+                                <option>격식</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="model">사용 모델</label>
+                            <select id="model" class="form-control">
+                                <option>ChatGPT-4</option>
+                                <option>Gemini</option>
+                                <option>Claude</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- 파일 업로드 -->
+                    <div class="upload-box">
+                        <img src="upload_icon.png" alt="" class="upload-icon" />
+                        <p class="upload-text">
+                            PDF 파일을 업로드 하거나 여기로 드래그 하세요.
+                        </p>
+                    </div>
+
+                    <!-- 버튼 -->
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">대본 생성하기</button>
+                        <button type="reset" class="btn btn-secondary">초기화 하기</button>
+                    </div>
+                </form>
+            </section>
+        </main>
+
+        <!-- 푸터 -->
+        <footer class="footer">
+            © 2025. Triz co. All rights reserved.
+        </footer>
+    </div>
+</body>
+
+</html>
