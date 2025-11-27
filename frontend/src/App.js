@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 
 import Login from './LogIn/Login.js';
 import MainBody from './MainBody/MainBody.js';
+import ScriptPage from './ScriptPage/ScriptPage.js';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태 관리
@@ -20,8 +21,16 @@ function App() {
             isLoggedIn ? <MainBody onLogout={() => setIsLoggedIn(false)} /> : <Navigate to="/" replace />
           }
         />
+        <Route
+          path="/result"
+          element={
+            isLoggedIn ? <ScriptPage onLogout={() => setIsLoggedIn(false)} /> : <Navigate to="/" replace />
+          }
+        />
       </Routes>
     </Router>
+
+
   );
 }
 

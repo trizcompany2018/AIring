@@ -5,6 +5,7 @@ import styled from "styled-components";
 import Cloud from '../upload.png'
 import MainHeader from "../MainHeader/MainHeader";
 import RoadingIcon from './roadingmotion.gif'
+import { useNavigate } from "react-router-dom";
 
 const BoxWrapper = styled.div`
   position: relative;
@@ -25,7 +26,7 @@ const Overlay = styled.div`
   pointer-events: all;
 `;
 
-const Loading  = styled.img`
+const Loading = styled.img`
 
 width: 200px;
 
@@ -205,10 +206,10 @@ display: none;
 
 const MainBody = ({ onLogout }) => {
     const [file, setFile] = useState(null);
-    const [script, setScript] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const fileInputRef = useRef(null);
+    const navigate = useNavigate();
     const handleUploadBoxClick = () => {
         fileInputRef.current.click();
     };
@@ -226,48 +227,74 @@ const MainBody = ({ onLogout }) => {
     };
 
     // 대본 생성 요청
-    const generateScript = async () => {
-        if (!file) {
-            setError("PDF 파일을 선택해주세요.");
-            return;
-        }
+    // const generateScript = async () => {
+    //     if (!file) {
+    //         setError("PDF 파일을 선택해주세요.");
+    //         return;
+    //     }
 
+    //     setLoading(true);
+    //     setError("");
+
+    //     const formData = new FormData();
+    //     formData.append("pdf", file);
+
+    //     try {
+    //         const response = await axios.post(
+    //             "https://airing-eabn.onrender.com/api/generate-script",
+    //             formData,
+    //             {
+    //                 headers: {
+    //                     "Content-Type": "multipart/form-data",
+    //                 },
+    //             }
+    //         );
+
+    //         if (response.data.success) {
+    //             const scriptText = response.data.script || "";
+
+    //             navigate("/result", { state: { script: scriptText } });
+    //         } else {
+    //             setError("대본 생성에 실패했습니다.");
+    //         }
+    //     } catch (err) {
+    //         setError(
+    //             "서버 연결에 실패했습니다. 백엔드 서버가 실행 중인지 확인해주세요."
+    //         );
+    //         console.error(err);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
+
+    const generateScript = async () => {
         setLoading(true);
         setError("");
 
-        const formData = new FormData();
-        formData.append("pdf", file);
-
         try {
             const response = await axios.post(
-                "https://airing-eabn.onrender.com/api/generate-script",
-                formData,
-                {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                }
+                "https://airing-eabn.onrender.com/api/test-script"
             );
 
             if (response.data.success) {
-                setScript(response.data.script);
+                const scriptText = response.data.script || "";
+
+                navigate("/result", { state: { script: scriptText } });
             } else {
                 setError("대본 생성에 실패했습니다.");
             }
         } catch (err) {
-            setError(
-                "서버 연결에 실패했습니다. 백엔드 서버가 실행 중인지 확인해주세요."
-            );
+            setError("서버 연결에 실패했습니다. 백엔드 서버가 실행 중인지 확인해주세요.");
             console.error(err);
         } finally {
             setLoading(false);
         }
     };
 
+
     // 초기화
     const handleReset = () => {
         setFile(null);
-        setScript("");
         setError("");
         // 파일 input 초기화
         const fileInput = document.getElementById("file-input");
@@ -289,46 +316,46 @@ const MainBody = ({ onLogout }) => {
             </BoxContainer>
             <Main>
                 <BoxWrapper>
-                <Box>
-                    <Form>
-                        <FormGroup>
-                            <FormLabel>강조 포인트</FormLabel>
-                            <FormControl
-                                id="highlight"
-                                type="text"
-                                placeholder="예시 : 라이브 환경 설명, 사용 편의성 강조"
-                            />
-                        </FormGroup>
-                        <FormGroup>
-                            <FormLabel>사용 지양 언어</FormLabel>
-                            <FormControl
-                                id="avoid-language"
-                                type="text"
-                                placeholder="예시 : 라이브 환경 설명, 사용 편의성 강조"
-                            />
-                        </FormGroup>
-                    </Form>
+                    <Box>
+                        <Form>
+                            <FormGroup>
+                                <FormLabel>강조 포인트</FormLabel>
+                                <FormControl
+                                    id="highlight"
+                                    type="text"
+                                    placeholder="예시 : 라이브 환경 설명, 사용 편의성 강조"
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <FormLabel>사용 지양 언어</FormLabel>
+                                <FormControl
+                                    id="avoid-language"
+                                    type="text"
+                                    placeholder="예시 : 라이브 환경 설명, 사용 편의성 강조"
+                                />
+                            </FormGroup>
+                        </Form>
 
-                    <FormRow>
-                        <FormGroup>
-                            <FormLabel>방송톤</FormLabel>
-                            <SelectControl>
-                                <option>기본</option>
-                                <option>간결</option>
-                                <option>격식</option>
-                            </SelectControl>
-                        </FormGroup>
-                        <FormGroup>
-                            <FormLabel>사용모델</FormLabel>
-                            <SelectControl>
-                                <option>ChatGPT-4</option>
-                                <option>Gemini</option>
-                                <option>Claude</option>
-                            </SelectControl>
-                        </FormGroup>
-                    </FormRow>
+                        <FormRow>
+                            <FormGroup>
+                                <FormLabel>방송톤</FormLabel>
+                                <SelectControl>
+                                    <option>기본</option>
+                                    <option>간결</option>
+                                    <option>격식</option>
+                                </SelectControl>
+                            </FormGroup>
+                            <FormGroup>
+                                <FormLabel>사용모델</FormLabel>
+                                <SelectControl>
+                                    <option>ChatGPT-4</option>
+                                    <option>Gemini</option>
+                                    <option>Claude</option>
+                                </SelectControl>
+                            </FormGroup>
+                        </FormRow>
 
-                    {/* PDF 업로드 영역 */}
+                        {/* PDF 업로드 영역 */}
 
                         <UploadBox onClick={handleUploadBoxClick}>
 
@@ -370,31 +397,12 @@ const MainBody = ({ onLogout }) => {
 
                         {error && <div className="error-message">⚠️ {error}</div>}
 
-
-                    {/* 생성된 대본 표시 영역 */}
-                    {script && (
-                        <div className="script-section">
-                            <h2>📝 생성된 방송 대본</h2>
-                            <div className="script-box">
-                                <pre>{script}</pre>
-                            </div>
-                            <button
-                                onClick={() => {
-                                    navigator.clipboard.writeText(script);
-                                    alert("대본이 클립보드에 복사되었습니다!");
-                                }}
-                                className="copy-btn"
-                            >
-                                📋 대본 복사하기
-                            </button>
-                        </div>
+                    </Box>
+                    {loading && (
+                        <Overlay>
+                            <Loading src={RoadingIcon} />
+                        </Overlay>
                     )}
-                </Box>
-                {loading && (
-                    <Overlay>
-                        <Loading src={RoadingIcon} />
-                    </Overlay>
-                )}
                 </BoxWrapper>
             </Main>
             <Footer>© 2025. Triz co. All rights reserved.</Footer>

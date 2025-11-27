@@ -354,87 +354,43 @@ async function callClaudeWithTimeout(args, timeoutMs = TIMEOUT_MS) {
     clearTimeout(timer);
   }
 }
-// ===== 테스트용(Anthropic 미사용) 즉시 응답 라우트 =====
-app.post('/api/test-script-local', (_req, res) => {
-  res.json({ success: true, script: '[LOCAL OK] 서버/라우팅 정상' });
-});
 
-app.post('/api/test-script', async (_req, res) => {
-  const TIMEOUT_MS = process.env.CLAUDE_TIMEOUT_MS ? Number(process.env.CLAUDE_TIMEOUT_MS) : 180000; // 180s
-  res.setTimeout(TIMEOUT_MS + 5000, () => {
-    console.error('Response timeout: /api/test-script');
-    try { res.status(504).json({ success:false, error:'Gateway Timeout' }); } catch {}
-  });
+// ===== 테스트용: PDF 없이 Claude에 간단 질문 =====
+app.post('/api/test-script', async (req, res) => {
+  const respond = respondOnce(res);
 
   try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => {
-      console.error(`[TIMEOUT] ${TIMEOUT_MS}ms elapsed → aborting Anthropic call (/api/test-script)`);
-      controller.abort();
-    }, TIMEOUT_MS);
-
-    const testProductInfo = `
-      제품명: 브레빌 아이스크림 메이커 BCI600
-      가격: 500,000원
-      특징: 컴프레서 내장, 사전 냉동 불필요, 20분 완성
-      용량: 1.5L
-
-      제품명: 브레빌 탄산수 제조기 인피즈 퓨전 BCA800
-      가격: 350,000원
-      특징: 과일 인퓨전 가능, 탄산 강도 조절
-
-      제품명: 브레빌 탄산수 제조기 인피즈 아쿠아 BCA600
-      가격: 300,000원
-      특징: 순수 탄산수 전용, 심플 디자인
-    `;
-
-    const response = await anthropic.messages.create(
-      {
-        model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-20250514',
-        max_tokens: 2048,                 // ★ 더 낮춤
-        temperature: 0.7,
-        system: '네이버 라이브 쇼핑 큐시트 작성 전문가. 추상어 금지, 표/리스트 중심, 실행형 문장.',
-        messages: [{
-          role: 'user',
-          content:
-`다음 핵심 가이드를 지켜 60분 큐시트를 간결하게 작성해라(필요 섹션만, 표/리스트 위주).
-
-[핵심]
-- 오프닝(카운트다운30초→브랜드영상1분→자기소개)
-- 구성/혜택 소개(쿠폰/적립/증정/이벤트 + 구매방법 시연)
-- 코너1: 메인제품 시연(핵심기능 3~4개, 구체 준비물/분량, 특수CAM/리허설 체크)
-- 코너2: 비교/추천(A vs B 표, 타겟 추천)
-- 코너3: 구매 가이드(타겟별 포인트)
-- 중간 퀴즈(4지선다), 구매인증 이벤트(3회)
-- VMD/의상/동선 구체화
-- 금지: 추상표현/기능나열/비교 없는 소개
-
-[제품 정보]
-${testProductInfo}
-
-[요구사항]
-- 방송 시간: 60분, 시간대: 오전 11시, 프로그램명: 가전주부의 핫IT슈
-- 반드시 포함: ①30초 카운트다운 ②2인 진행(쇼호스트 서경환/크리에이터 서영)
-③"○○ 고민, △△로 해결!" 코너명 ④구체적 시연 준비물/분량
-⑤중간 퀴즈(4지선다) ⑥제품 비교 ⑦VMD/의상 설정
-
-섹션별 타임코드/배너문구/준비물표/비교표 포함.`
-        }]
-      },
-      { signal: controller.signal }
-    );
-
-    clearTimeout(timer);
-    res.json({ success: true, script: response.content?.[0]?.text || '' });
-  } catch (error) {
-    console.error('Error in /api/test-script:', error);
-    res.status(500).json({
-      success: false,
-      error: '테스트 대본 생성 중 오류가 발생했습니다.',
-      details: String(error?.message || error),
+    const response = await callClaudeWithTimeout({
+      model: MODEL_ID,
+      max_tokens: 256,
+      temperature: 0,
+      system: "당신은 간단한 질문에 짧고 명확하게 답하는 어시스턴트입니다.",
+      messages: [
+        {
+          role: "user",
+          content: "뉴질랜드의 수도는 어디야?"
+        }
+      ]
     });
+
+    const answer = response.content?.[0]?.text || "";
+
+    respond.json(200, {
+      success: true,
+      script: answer   // 👈 프론트가 기존처럼 script로 받도록 맞춰줌
+    });
+  } catch (error) {
+    console.error("Error in /api/test-script:", error);
+    if (!respond.isSent()) {
+      respond.json(500, {
+        success: false,
+        error: "테스트 스크립트 생성 중 오류가 발생했습니다.",
+        details: String(error?.message || error),
+      });
+    }
   }
 });
+
 
 // ===== 실제 PDF 업로드 버전 =====
 app.post('/api/generate-script', upload.single('pdf'), async (req, res) => {
