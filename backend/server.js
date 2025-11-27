@@ -371,7 +371,7 @@ app.post('/api/test-script', async (req, res) => {
     }
 
     const response = await callClaudeWithTimeout({
-      model: MODEL_ID,
+      model: "claude-sonnet-4-20250514",
       max_tokens: 500,
       temperature: 0,
       system: "당신은 간단한 질문에 짧고 명확하게 답하는 어시스턴트입니다.",
@@ -431,7 +431,7 @@ app.post('/api/generate-script', upload.single('pdf'), async (req, res) => {
     } = req.body;
 
     // ✅ 모델 선택 (프론트가 보낸 게 있으면 그거, 없으면 기존 상수)
-    const modelId = model || MODEL_ID;
+    const modelId = MODEL_ID;
 
     // ✅ 톤에 따라 안내 문구 다르게
     let toneGuide = '';
