@@ -373,7 +373,7 @@ app.post('/api/test-script', async (req, res) => {
 
     const response = await callClaudeWithTimeout({
       model: MODEL_ID,
-      max_tokens: 256,
+      max_tokens: 500,
       temperature: 0,
       system: "당신은 간단한 질문에 짧고 명확하게 답하는 어시스턴트입니다.",
       messages: [

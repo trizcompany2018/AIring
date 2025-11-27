@@ -273,8 +273,8 @@ const MainBody = ({ onLogout }) => {
 
         try {
             const response = await axios.post(
-                "https://airing-eabn.onrender.com/api/test-script"
-                { question: "LG 트윈스의 레전드 선수를 알려줘" }
+                "https://airing-eabn.onrender.com/api/test-script",
+                { question: "내가 2박 3일동안 영국의 런던을 방문하려고 해. 너가 어느 곳을 방문하면 좋을지 추천해줘" }
             );
 
             if (response.data.success) {
