@@ -1,7 +1,8 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import Logo from '../MainHeader/logo.png'
 import LoginIcon from './login_icon.png'
 import { Navigate, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 
 const Container = styled.div`
@@ -42,7 +43,8 @@ const LoginField = styled.div`
   align-items: center;
   background: #ffffff;
   border-radius: 999px;
-  border: 2px solid #26d481;
+   border: 2px solid ${({ $isError }) => ($isError ? '#da1705' : '#26d481')};
+   animation: ${({ $isError }) => ($isError ? shake : 'none')} 0.4s ease;
   max-width: 420px;
   width: 100%;
   padding: 0 4px 0 24px;
@@ -74,18 +76,53 @@ const LoginImage = styled.img`
 width: 26px;
 height: 26px;
 
-
 `
 
+const shake = keyframes`
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+  100% { transform: translateX(0); }
+`;
 
-const Login = ({onLogin}) => {
+
+const Login = ({ onLogin }) => {
 
     const navigate = useNavigate();
+    const CORRECT_PASSWORD = "1q2w3e4r!";
+    const [password, setPassword] = useState('');
+    const [isError, setIsError] = useState(false);
+    const [defaultholder, setDefaultholder] = useState("비밀번호를 입력해주세요");
 
     const handleLogin = () => {
 
-        onLogin();
-        navigate('/main')
+        setIsError(false);
+
+        if (password === CORRECT_PASSWORD) {
+            setIsError(false);
+            onLogin();
+            navigate('/main');
+        } else {
+            // 비밀번호 틀렸을 때
+            setPassword("")
+            setDefaultholder("비밀번호가 틀렸습니다")
+            setIsError(true);
+        }
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            handleLogin();
+        }
+    };
+
+    const handleChange = (e) => {
+        setPassword(e.target.value);
+        // ✅ 사용자가 다시 입력 시작하면 에러 상태 해제
+        if (isError) setIsError(false);
+
 
     }
 
@@ -95,9 +132,14 @@ const Login = ({onLogin}) => {
                 <LogoImage src={Logo} />
             </Header>
             <Main>
-                <LoginField>
-                    <LoginInput placeholder="비밀번호를입력해주세요" />
-                    <LoginBtn  onClick={handleLogin}>
+                <LoginField $isError={isError}>
+                    <LoginInput placeholder={defaultholder}
+                        type="password"
+                        value={password}
+                        onChange={handleChange}
+                        onKeyDown={handleKeyDown}
+                        $isError={isError} />
+                    <LoginBtn onClick={handleLogin}>
                         <LoginImage src={LoginIcon} />
                     </LoginBtn>
                 </LoginField>

@@ -208,6 +208,11 @@ const MainBody = ({ onLogout }) => {
     const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [highlight, setHighlight] = useState('');
+    const [avoidLanguage, setAvoidLanguage] = useState('');
+    const [tone, setTone] = useState('기본');
+    const [model, setModel] = useState('claude-sonnet-4');
+
     const fileInputRef = useRef(null);
     const navigate = useNavigate();
     const handleUploadBoxClick = () => {
@@ -226,60 +231,36 @@ const MainBody = ({ onLogout }) => {
         }
     };
 
-    // 대본 생성 요청
-    // const generateScript = async () => {
-    //     if (!file) {
-    //         setError("PDF 파일을 선택해주세요.");
-    //         return;
-    //     }
-
-    //     setLoading(true);
-    //     setError("");
-
-    //     const formData = new FormData();
-    //     formData.append("pdf", file);
-
-    //     try {
-    //         const response = await axios.post(
-    //             "https://airing-eabn.onrender.com/api/generate-script",
-    //             formData,
-    //             {
-    //                 headers: {
-    //                     "Content-Type": "multipart/form-data",
-    //                 },
-    //             }
-    //         );
-
-    //         if (response.data.success) {
-    //             const scriptText = response.data.script || "";
-
-    //             navigate("/result", { state: { script: scriptText } });
-    //         } else {
-    //             setError("대본 생성에 실패했습니다.");
-    //         }
-    //     } catch (err) {
-    //         setError(
-    //             "서버 연결에 실패했습니다. 백엔드 서버가 실행 중인지 확인해주세요."
-    //         );
-    //         console.error(err);
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
-
+    //대본 생성 요청
     const generateScript = async () => {
+        if (!file) {
+            setError("PDF 파일을 선택해주세요.");
+            return;
+        }
+
         setLoading(true);
         setError("");
 
+        const formData = new FormData();
+        formData.append("pdf", file); // 기존 PDF
+        formData.append("highlight", highlight);            // 🔥 강조포인트
+        formData.append("avoidLanguage", avoidLanguage);    // 🔥 지양 언어
+        formData.append("tone", tone);                      // 🔥 방송톤
+        formData.append("model", model);                    // 🔥 모델 선택
+
         try {
             const response = await axios.post(
-                "https://airing-eabn.onrender.com/api/test-script",
-                { question: "내가 2박 3일동안 영국의 런던을 방문하려고 해. 너가 어느 곳을 방문하면 좋을지 추천해줘" }
+                "https://airing-eabn.onrender.com/api/generate-script",
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
             );
 
             if (response.data.success) {
                 const scriptText = response.data.script || "";
-
                 navigate("/result", { state: { script: scriptText } });
             } else {
                 setError("대본 생성에 실패했습니다.");
@@ -291,6 +272,33 @@ const MainBody = ({ onLogout }) => {
             setLoading(false);
         }
     };
+
+    // 테스트용 임시 api 요청
+
+    // const generateScript = async () => {
+    //     setLoading(true);
+    //     setError("");
+
+    //     try {
+    //         const response = await axios.post(
+    //             "https://airing-eabn.onrender.com/api/test-script",
+    //             { question: "역대 뉴질랜드 총리를 엘리자베스 2세 시절부터 임기와 함께 당적을 알려줘" }
+    //         );
+
+    //         if (response.data.success) {
+    //             const scriptText = response.data.script || "";
+
+    //             navigate("/result", { state: { script: scriptText } });
+    //         } else {
+    //             setError("대본 생성에 실패했습니다.");
+    //         }
+    //     } catch (err) {
+    //         setError("서버 연결에 실패했습니다. 백엔드 서버가 실행 중인지 확인해주세요.");
+    //         console.error(err);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
 
 
     // 초기화
@@ -325,14 +333,19 @@ const MainBody = ({ onLogout }) => {
                                     id="highlight"
                                     type="text"
                                     placeholder="예시 : 라이브 환경 설명, 사용 편의성 강조"
+                                    value={highlight}
+                                    onChange={(e) => setHighlight(e.target.value)}
                                 />
                             </FormGroup>
+
                             <FormGroup>
                                 <FormLabel>사용 지양 언어</FormLabel>
                                 <FormControl
                                     id="avoid-language"
                                     type="text"
-                                    placeholder="예시 : 라이브 환경 설명, 사용 편의성 강조"
+                                    placeholder="예시 : 과한 최상급 표현, 경쟁사 비하 표현 지양"
+                                    value={avoidLanguage}
+                                    onChange={(e) => setAvoidLanguage(e.target.value)}
                                 />
                             </FormGroup>
                         </Form>
@@ -340,22 +353,27 @@ const MainBody = ({ onLogout }) => {
                         <FormRow>
                             <FormGroup>
                                 <FormLabel>방송톤</FormLabel>
-                                <SelectControl>
-                                    <option>기본</option>
-                                    <option>간결</option>
-                                    <option>격식</option>
+                                <SelectControl
+                                    value={tone}
+                                    onChange={(e) => setTone(e.target.value)}
+                                >
+                                    <option value="기본">기본</option>
+                                    <option value="간결">간결</option>
+                                    <option value="격식">격식</option>
                                 </SelectControl>
                             </FormGroup>
+
                             <FormGroup>
                                 <FormLabel>사용모델</FormLabel>
-                                <SelectControl>
-                                    <option>ChatGPT-4</option>
-                                    <option>Gemini</option>
-                                    <option>Claude</option>
+                                <SelectControl
+                                    value={model}
+                                    onChange={(e) => setModel(e.target.value)}
+                                >
+                                    <option value="claude-sonnet-4">claude-sonnet-4</option>
+                                    {/* 나중에 모델 추가하면 option만 늘리면 됨 */}
                                 </SelectControl>
                             </FormGroup>
                         </FormRow>
-
                         {/* PDF 업로드 영역 */}
 
                         <UploadBox onClick={handleUploadBoxClick}>

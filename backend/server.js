@@ -356,7 +356,6 @@ async function callClaudeWithTimeout(args, timeoutMs = TIMEOUT_MS) {
 }
 
 // ===== 테스트용: PDF 없이 Claude에 간단 질문 =====
-// ===== 테스트용: PDF 없이 Claude에 간단 질문 =====
 app.post('/api/test-script', async (req, res) => {
   const respond = respondOnce(res);
 
@@ -409,7 +408,7 @@ app.post('/api/test-script', async (req, res) => {
 app.post('/api/generate-script', upload.single('pdf'), async (req, res) => {
   const respond = respondOnce(res);
 
-  const timeoutMs = TIMEOUT_MS; // .env의 CLAUDE_TIMEOUT_MS 사용
+  const timeoutMs = TIMEOUT_MS;
   const controller = new AbortController();
   const timer = setTimeout(() => {
     console.error(`[TIMEOUT] ${timeoutMs}ms elapsed → aborting Anthropic call (/api/generate-script)`);
@@ -423,19 +422,44 @@ app.post('/api/generate-script', upload.single('pdf'), async (req, res) => {
       productInfo = pdfData.text || '';
     }
 
+    // ✅ 프론트에서 온 값들
+    const {
+      highlight = '',
+      avoidLanguage = '',
+      tone = '기본',
+      model, // 선택 모델 (없으면 기본 MODEL_ID 사용)
+    } = req.body;
+
+    // ✅ 모델 선택 (프론트가 보낸 게 있으면 그거, 없으면 기존 상수)
+    const modelId = model || MODEL_ID;
+
+    // ✅ 톤에 따라 안내 문구 다르게
+    let toneGuide = '';
+    if (tone === '간결') {
+      toneGuide = '말투는 최대한 간결하고 핵심 위주로 작성해주세요.';
+    } else if (tone === '격식') {
+      toneGuide = '말투는 격식 있고 공손하게 작성해주세요.';
+    } else {
+      toneGuide = '말투는 자연스럽고 친근하지만 과하지 않게 작성해주세요.';
+    }
+
     const t0 = Date.now();
     const response = await anthropic.messages.create(
       {
-        model: MODEL_ID,
-        max_tokens: 4096,              //
+        model: modelId,
+        max_tokens: 4200,
         temperature: 0.7,
         system:
           `당신은 네이버 라이브 쇼핑 방송 대본 작성 전문가입니다.\n\n` +
           `다음 가이드라인을 반드시 준수하여 큐시트를 작성해주세요:\n${BROADCAST_GUIDELINES}\n\n` +
           `위 가이드라인을 엄격히 따라 실제 방송에서 사용 가능한 전문적인 큐시트를 작성해주세요.\n` +
           `반드시 가이드라인의 모든 요소를 포함하여 작성하세요.\n` +
-          `상품의 혜택이나 가격 요소는 (혜택소개), (가격소개) 등으로 표시만 하고 구체 금액은 생략하세요.`+
-          `방송 진행 일정은 8월입니다. 계절감에 맞는 진행을 해주세요`, 
+          `상품의 혜택이나 가격 요소는 (혜택소개), (가격소개) 등으로 표시만 하고 구체 금액은 생략하세요.\n` +
+          `방송 진행 일정은 8월입니다. 계절감에 맞는 진행을 해주세요.\n` +
+          `방송 전반의 톤앤매너:\n${toneGuide}\n` +
+          (avoidLanguage
+            ? `다음 표현이나 어투는 사용을 지양하세요: ${avoidLanguage}\n`
+            : ``),
         messages: [
           {
             role: 'user',
@@ -446,8 +470,11 @@ app.post('/api/generate-script', upload.single('pdf'), async (req, res) => {
               `- 방송 시간: 60분\n` +
               `- 시간대: 오전 11시\n` +
               `- 형식: 네이버 라이브 쇼핑\n` +
-              `- 프로그램명: 가전주부의 핫IT슈\n\n` +
-              `반드시 포함해야 할 요소:\n` +
+              `- 프로그램명: 가전주부의 핫IT슈\n` +
+              (highlight
+                ? `- 방송에서 특히 강조해야 할 포인트: ${highlight}\n`
+                : ``) +
+              `\n반드시 포함해야 할 요소:\n` +
               `1. 30초 카운트다운으로 시작\n` +
               `2. 쇼호스트()와 크리에이터() 2인 진행\n` +
               `3. "○○ 고민, △△로 해결!" 형식의 코너명\n` +
@@ -459,13 +486,13 @@ app.post('/api/generate-script', upload.single('pdf'), async (req, res) => {
           },
         ],
       },
-      { signal: controller.signal }     // 타임아웃은 이걸로만 처리
+      { signal: controller.signal }
     );
+
     console.log(`[LATENCY] /api/generate-script took ${Date.now() - t0}ms`);
 
     respond.json(200, { success: true, script: response.content?.[0]?.text || '' });
   } catch (error) {
-    // Abort(사용자 타임아웃) 여부 구분
     const aborted =
       (error && (error.name === 'AbortError' || /aborted/i.test(String(error.message)))) ? true : false;
 
@@ -482,7 +509,6 @@ app.post('/api/generate-script', upload.single('pdf'), async (req, res) => {
         });
       }
     }
-    // 응답이 이미 나갔으면(타 모듈에서 전송), 여기서는 아무 것도 안 함
   } finally {
     clearTimeout(timer);
   }

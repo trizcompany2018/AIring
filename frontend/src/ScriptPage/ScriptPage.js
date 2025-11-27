@@ -126,7 +126,7 @@ font-family: "Pretendard";
 font-size: 14px;
 
 `
-const ScriptPage = () => {
+const ScriptPage = ({onLogout}) => {
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -160,7 +160,7 @@ const ScriptPage = () => {
 
     return (
         <Container>
-            <MainHeader />
+            <MainHeader onLogout={onLogout}/>
             <Page>
                 <BoxContainer>
                     <BoxHeader>

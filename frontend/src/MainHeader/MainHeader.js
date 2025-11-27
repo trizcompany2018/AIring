@@ -2,7 +2,7 @@ import Logo from "./main_logo.png";
 import Logout from "./logout.png";
 import styled from "styled-components";
 
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const ContainerHeader = styled.div`
   display: flex;
