@@ -274,6 +274,7 @@ const MainBody = ({ onLogout }) => {
         try {
             const response = await axios.post(
                 "https://airing-eabn.onrender.com/api/test-script"
+                { question: "LG 트윈스의 레전드 선수를 알려줘" }
             );
 
             if (response.data.success) {

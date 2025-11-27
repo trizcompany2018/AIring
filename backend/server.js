@@ -356,10 +356,21 @@ async function callClaudeWithTimeout(args, timeoutMs = TIMEOUT_MS) {
 }
 
 // ===== 테스트용: PDF 없이 Claude에 간단 질문 =====
+// ===== 테스트용: PDF 없이 Claude에 간단 질문 =====
 app.post('/api/test-script', async (req, res) => {
   const respond = respondOnce(res);
 
   try {
+    // 🔥 프론트에서 보낸 질문 받기
+    const { question } = req.body;
+
+    if (!question || typeof question !== "string") {
+      return respond.json(400, {
+        success: false,
+        error: "question 문자열이 필요합니다."
+      });
+    }
+
     const response = await callClaudeWithTimeout({
       model: MODEL_ID,
       max_tokens: 256,
@@ -368,7 +379,7 @@ app.post('/api/test-script', async (req, res) => {
       messages: [
         {
           role: "user",
-          content: "뉴질랜드의 수도는 어디야?"
+          content: question   // 👈 프론트에서 받은 질문을 Claude에 전달
         }
       ]
     });
@@ -377,8 +388,9 @@ app.post('/api/test-script', async (req, res) => {
 
     respond.json(200, {
       success: true,
-      script: answer   // 👈 프론트가 기존처럼 script로 받도록 맞춰줌
+      script: answer
     });
+
   } catch (error) {
     console.error("Error in /api/test-script:", error);
     if (!respond.isSent()) {
@@ -390,6 +402,7 @@ app.post('/api/test-script', async (req, res) => {
     }
   }
 });
+
 
 
 // ===== 실제 PDF 업로드 버전 =====
