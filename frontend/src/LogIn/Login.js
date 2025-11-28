@@ -1,18 +1,19 @@
 import styled, { keyframes } from "styled-components";
-import Logo from '../MainHeader/logo.png'
+import Logo from './main_motion.gif'
 import LoginIcon from './login_icon.png'
 import { Navigate, useNavigate } from "react-router-dom";
 import { useState } from "react";
-
+import Footer from "../Footer/Footer";
+import MainHeader from "../MainHeader/MainHeader";
 
 const Container = styled.div`
 
 width: 100vw;
-height: 100vh;
+min-height: 100vh;
 background-color: #f4f0e7;
 display: flex;
 align-items: center;
-justify-content: center;
+justify-content: space-between;
 flex-direction: column;
 
 `
@@ -24,12 +25,10 @@ align-items: center;
 justify-content: center;
 padding-bottom: 30px;
 
-
-
 `
 const LogoImage = styled.img`
 
-height: 120px;
+width: 385px;
 
 `
 const Main = styled.main`
@@ -87,6 +86,16 @@ const shake = keyframes`
   100% { transform: translateX(0); }
 `;
 
+const LoginBox = styled.div`
+
+
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+
+
+`
 
 const Login = ({ onLogin }) => {
 
@@ -123,28 +132,34 @@ const Login = ({ onLogin }) => {
         // ✅ 사용자가 다시 입력 시작하면 에러 상태 해제
         if (isError) setIsError(false);
 
+    }
+
+    const onLogout = () => {
 
     }
 
     return (
         <Container>
-            <Header>
-                <LogoImage src={Logo} />
-            </Header>
-            <Main>
-                <LoginField $isError={isError}>
-                    <LoginInput placeholder={defaultholder}
-                        type="password"
-                        value={password}
-                        onChange={handleChange}
-                        onKeyDown={handleKeyDown}
-                        $isError={isError} />
-                    <LoginBtn onClick={handleLogin}>
-                        <LoginImage src={LoginIcon} />
-                    </LoginBtn>
-                </LoginField>
-            </Main>
-
+            <MainHeader onLogout={onLogout} page="login"/>
+            <LoginBox>
+                <Header>
+                    <LogoImage src={Logo} />
+                </Header>
+                <Main>
+                    <LoginField $isError={isError}>
+                        <LoginInput placeholder={defaultholder}
+                            type="password"
+                            value={password}
+                            onChange={handleChange}
+                            onKeyDown={handleKeyDown}
+                            $isError={isError} />
+                        <LoginBtn onClick={handleLogin}>
+                            <LoginImage src={LoginIcon} />
+                        </LoginBtn>
+                    </LoginField>
+                </Main>
+            </LoginBox>
+            <Footer colour="8F8F8F" />
         </Container>
     )
 

@@ -2,12 +2,18 @@ import MainHeader from "../MainHeader/MainHeader";
 import styled from "styled-components";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../App.css";
+import Footer from '../Footer/Footer.js'
 
 
 const Container = styled.div`
   min-height: 100vh;
   width: 100vw;
   background-color: #f4f1eb;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
 `;
 
 const Page = styled.div`
@@ -35,13 +41,6 @@ const BoxHeader = styled.div`
   width: 90vw;
 `;
 
-const Footer = styled.div`
-  text-align: center;
-  padding: 16px 0 24px;
-  font-size: 12px;
-  font-weight: 400;
-  color: #f9fafb;
-`;
 
 const Box = styled.div`
   width: 90vw;
@@ -160,7 +159,7 @@ const ScriptPage = ({onLogout}) => {
 
     return (
         <Container>
-            <MainHeader onLogout={onLogout}/>
+            <MainHeader onLogout={onLogout} page="main_g"/>
             <Page>
                 <BoxContainer>
                     <BoxHeader>
@@ -186,7 +185,7 @@ const ScriptPage = ({onLogout}) => {
                     </FormActions>
                 </Main>
 
-                <Footer>© 2025. Triz co. All rights reserved.</Footer>
+                <Footer />
             </Page>
         </Container>
     );

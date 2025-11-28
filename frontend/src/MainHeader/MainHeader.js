@@ -1,5 +1,8 @@
 import Logo from "./main_logo.png";
+import WhiteLogo from "./white_logo.png"
+import TrizLogo from './triz.png'
 import Logout from "./logout.png";
+import Group from './Group.png'
 import styled from "styled-components";
 
 import { useNavigate } from "react-router-dom";
@@ -9,6 +12,7 @@ const ContainerHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 24px 40px;
+  width: 100vw;
   
 `;
 const Image = styled.img`
@@ -31,7 +35,7 @@ const LogoutImage = styled.img`
   width: 20px;
   height: 20px;
 `;
-const MainHeader = ({ onLogout }) => {
+const MainHeader = ({ onLogout, page }) => {
 
   const navigate = useNavigate();
 
@@ -43,9 +47,15 @@ const MainHeader = ({ onLogout }) => {
 
   return (
     <ContainerHeader>
-      <Image src={Logo} />
+      {page === "main_w" ? (
+        <Image src={WhiteLogo} /> 
+      ) : page === "main_g" ? (
+        <Image src={Logo} />  
+      ) : (
+        <Image src={TrizLogo} />
+      )}
       <LogoutContainer onClick={handleLogout}>
-        <LogoutImage src={Logout} />
+        {page == "login" ?<LogoutImage src={Group} />  :<LogoutImage src={Logout} /> }
       </LogoutContainer>
     </ContainerHeader>
   );

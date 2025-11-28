@@ -4,38 +4,20 @@ import "../App.css";
 import styled from "styled-components";
 import Cloud from '../upload.png'
 import MainHeader from "../MainHeader/MainHeader";
-import RoadingIcon from './roadingmotion.gif'
 import { useNavigate } from "react-router-dom";
+import Overlay from "./Overlay";
+import TitleBox from "../TitleBox/Titlebox";
+import Footer from '../Footer/Footer.js'
 
 const BoxWrapper = styled.div`
   position: relative;
 `;
 
-const Overlay = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.4); /* 회색 반투명 */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-  border-radius: 20px;
-  pointer-events: all;
-`;
-
-const Loading = styled.img`
-
-width: 200px;
-
-`
-
 const Page = styled.div`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  align-items: center;
 `;
 const Main = styled.div`
 
@@ -46,30 +28,6 @@ const Main = styled.div`
 
 `;
 
-
-const BoxContainer = styled.div`
-
-width: 100vw;
-display: flex;
-justify-content: center;
-align-items: center;
-
-
-`
-
-
-const BoxHeader = styled.div`
-    width: 90vw;
-
-`;
-
-const Footer = styled.div`
-  text-align: center;
-  padding: 16px 0 24px;
-  font-size: 12px;
-  font-weight: 400;
-  color: #f9fafb;
-`;
 const Box = styled.div`
   width: 90vw;
   background: #fff;
@@ -82,17 +40,7 @@ const Box = styled.div`
   flex-direction: column;
 padding-top: 40px;
 `;
-const PageTitle = styled.p`
-  font-size: 40px;
-  font-weight: 700; /* Bold */
-  margin-bottom: 8px;
-`;
 
-const PageSubTitle = styled.p`
-  font-size: 14px;
-  font-weight: 400;
-  color: #4b5563;
-`;
 
 const Form = styled.form`
   display: flex;
@@ -275,30 +223,30 @@ const MainBody = ({ onLogout }) => {
 
     // 테스트용 임시 api 요청
 
-    // const generateScript = async () => {
-    //     setLoading(true);
-    //     setError("");
+    const generateTest = async () => {
+        setLoading(true);
+        setError("");
 
-    //     try {
-    //         const response = await axios.post(
-    //             "https://airing-eabn.onrender.com/api/test-script",
-    //             { question: "역대 뉴질랜드 총리를 엘리자베스 2세 시절부터 임기와 함께 당적을 알려줘" }
-    //         );
+        try {
+            const response = await axios.post(
+                "https://airing-eabn.onrender.com/api/test-script",
+                { question: "리버풀 FC의 빌 샹클리 이후 역대 감독을 제임 기간과 이룩한 업적과 함께 알려줘" }
+            );
 
-    //         if (response.data.success) {
-    //             const scriptText = response.data.script || "";
+            if (response.data.success) {
+                const scriptText = response.data.script || "";
 
-    //             navigate("/result", { state: { script: scriptText } });
-    //         } else {
-    //             setError("대본 생성에 실패했습니다.");
-    //         }
-    //     } catch (err) {
-    //         setError("서버 연결에 실패했습니다. 백엔드 서버가 실행 중인지 확인해주세요.");
-    //         console.error(err);
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
+                navigate("/result", { state: { script: scriptText } });
+            } else {
+                setError("대본 생성에 실패했습니다.");
+            }
+        } catch (err) {
+            setError("서버 연결에 실패했습니다. 백엔드 서버가 실행 중인지 확인해주세요.");
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
 
     // 초기화
@@ -312,17 +260,10 @@ const MainBody = ({ onLogout }) => {
 
     return (
         <Page>
-            <MainHeader onLogout={onLogout} />
+            <MainHeader onLogout={onLogout} page="main_w"/>
 
-            <BoxContainer>
-                <BoxHeader>
-                    <PageTitle>라이브 방송 대본 생성</PageTitle>
-                    <PageSubTitle>
-                        제품 정보가 포함된 PDF를 업로드하면 AI가 방송 대본을 자동으로
-                        생성해 드립니다.
-                    </PageSubTitle>
-                </BoxHeader>
-            </BoxContainer>
+            <TitleBox />
+
             <Main>
                 <BoxWrapper>
                     <Box>
@@ -367,8 +308,7 @@ const MainBody = ({ onLogout }) => {
                                 <FormLabel>사용모델</FormLabel>
                                 <SelectControl
                                     value={model}
-                                    onChange={(e) => setModel(e.target.value)}
-                                >
+                                    onChange={(e) => setModel(e.target.value)}>
                                     <option value="claude-sonnet-4">claude-sonnet-4</option>
                                     {/* 나중에 모델 추가하면 option만 늘리면 됨 */}
                                 </SelectControl>
@@ -417,14 +357,10 @@ const MainBody = ({ onLogout }) => {
                         {error && <div className="error-message">⚠️ {error}</div>}
 
                     </Box>
-                    {loading && (
-                        <Overlay>
-                            <Loading src={RoadingIcon} />
-                        </Overlay>
-                    )}
+                    {loading && <Overlay />}
                 </BoxWrapper>
             </Main>
-            <Footer>© 2025. Triz co. All rights reserved.</Footer>
+            <Footer colour="#FFFFFF" />
         </Page>
     );
 }
