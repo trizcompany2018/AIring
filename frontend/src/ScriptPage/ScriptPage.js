@@ -51,7 +51,7 @@ const Box = styled.div`
   border: 2px solid #05da88;
   display: flex;
   flex-direction: column;
-
+  align-items: center;
   min-height: 10rem;
 `;
 
@@ -121,6 +121,7 @@ margin-bottom: 10px;
 const TextBox = styled.pre`
 
 margin: 10px;
+width: 80vw;
 font-family: "Pretendard";
 font-size: 14px;
 
