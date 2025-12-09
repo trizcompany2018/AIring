@@ -1,5 +1,5 @@
 import styled, { keyframes } from "styled-components";
-import Logo from './main_motion.gif'
+import Logo from '../MainBody/airup_logo.gif'
 import LoginIcon from './login_icon.png'
 import { Navigate, useNavigate } from "react-router-dom";
 import { useState } from "react";

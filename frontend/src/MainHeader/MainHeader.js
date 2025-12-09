@@ -1,5 +1,5 @@
-import Logo from "./main_logo.png";
-import WhiteLogo from "./white_logo.png"
+import Logo from "./main_logo2.png";
+import WhiteLogo from "./white_logo2.png"
 import TrizLogo from './triz.png'
 import Logout from "./logout.png";
 import Group from './Group.png'

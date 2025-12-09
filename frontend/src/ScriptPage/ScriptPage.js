@@ -51,7 +51,7 @@ const Box = styled.div`
   border: 2px solid #05da88;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center;s
   min-height: 10rem;
 `;
 
