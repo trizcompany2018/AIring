@@ -11,7 +11,7 @@ const ContainerHeader = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-background-color: #FFFFFF;
+background-color: ${({ page }) => (page === "login" ? "#F4F1EB" : "white")};
 height: 50px;
   
 `;
@@ -53,7 +53,7 @@ const MainHeader = ({ onLogout, page }) => {
 
 
   return (
-    <ContainerHeader>
+    <ContainerHeader page={page}>
       <Header>
       {page === "main_w" ? (
         <Image src={WhiteLogo} /> 
