@@ -1,0 +1,94 @@
+import styled from 'styled-components'
+import menu from './menu.png'
+import schedule from './icon_Schedule.png'
+import writing from './icon_Writing_on.png'
+import gemini from './Vector.png'
+import gpt from './ChatGPT-Logo 1.png'
+import logo from '../../MainHeader/white_logo2.png'
+import { useState } from 'react'
+
+const NavContainer = styled.div`
+
+ width: ${({ isOpen }) => (isOpen ? "240px" : "80px")};
+background-color: #00C86E;
+display: flex;
+flex-direction: column;
+align-items: center;
+transition: width 0.3s ease;
+
+`
+const MenuContainer = styled.div`
+
+height: 50px;
+ width: ${({ isOpen }) => (isOpen ? "240px" : "80px")};
+display: flex;
+align-items: center;
+margin-bottom: 25px;
+
+`
+const MenuIcon = styled.img`
+
+width: 24px;
+margin-left: 28px;
+margin-right: 28px;
+
+`
+const Text = styled.div`
+
+width: 100px;
+display: flex;
+align-items: center;
+justify-content: left;
+color: #B3FFD2;
+font-weight: 500;
+font-size: 20px;
+
+`
+
+const LogoImage = styled.img`
+
+  height: 28px;
+
+`
+
+const NavBar = () => {
+
+    const [clickState, setClickState] = useState(false);
+
+    const handleClick = () => {
+        setClickState(!clickState)
+    }
+
+
+    return (
+
+        <NavContainer isOpen={clickState}>
+            <MenuContainer isOpen={clickState} onClick={handleClick}>
+                <MenuIcon src={menu}  />
+                {clickState?<Text><LogoImage src={logo}/></Text>:null}
+            </MenuContainer>
+            <MenuContainer isOpen={clickState}>
+                <MenuIcon src={schedule} />
+                {clickState?<Text>Schedule</Text>:null}
+            </MenuContainer>
+            <MenuContainer isOpen={clickState}>
+                <MenuIcon src={writing} />
+                {clickState?<Text>Writing</Text>:null}
+            </MenuContainer>
+            <MenuContainer isOpen={clickState}>
+                <MenuIcon src={gemini} />
+                {clickState?<Text>Gemini</Text>:null}
+            </MenuContainer>
+            <MenuContainer isOpen={clickState}>
+                <MenuIcon src={gpt} />
+                {clickState?<Text>ChatGPT</Text>:null}
+            </MenuContainer>
+        </NavContainer>
+
+
+
+    )
+
+}
+
+export default NavBar;

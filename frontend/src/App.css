@@ -6,7 +6,8 @@
 
 body {
   font-family: "Pretendard", sans-serif;
-  background: linear-gradient(180deg, #7df18e, #00c66c);
+  /* background: linear-gradient(180deg, #7df18e, #00c66c); */
+  background-color: #F4F1EB;
   color: #111;
   font-weight: 400; /* 기본 regular */
   overflow-x:hidden;

@@ -447,7 +447,7 @@ app.post('/api/generate-script', upload.single('pdf'), async (req, res) => {
     const response = await anthropic.messages.create(
       {
         model: modelId,
-        max_tokens: 4200,
+        max_tokens: 4500,
         temperature: 0.7,
         system:
           `당신은 네이버 라이브 쇼핑 방송 대본 작성 전문가입니다.\n\n` +
@@ -455,7 +455,7 @@ app.post('/api/generate-script', upload.single('pdf'), async (req, res) => {
           `위 가이드라인을 엄격히 따라 실제 방송에서 사용 가능한 전문적인 큐시트를 작성해주세요.\n` +
           `반드시 가이드라인의 모든 요소를 포함하여 작성하세요.\n` +
           `상품의 혜택이나 가격 요소는 (혜택소개), (가격소개) 등으로 표시만 하고 구체 금액은 생략하세요.\n` +
-          `방송 진행 일정은 8월입니다. 계절감에 맞는 진행을 해주세요.\n` +
+          `방송 진행 일정은 12월입니다. 계절감에 맞는 진행을 해주세요.\n` +
           `방송 전반의 톤앤매너:\n${toneGuide}\n` +
           (avoidLanguage
             ? `다음 표현이나 어투는 사용을 지양하세요: ${avoidLanguage}\n`
@@ -464,13 +464,13 @@ app.post('/api/generate-script', upload.single('pdf'), async (req, res) => {
           {
             role: 'user',
             content:
-              `다음 제품 정보를 바탕으로 60분 라이브 방송 큐시트를 작성해주세요:\n\n` +
+              `다음 제품 정보를 바탕으로 60분 라이브 방송 큐시트를 작성해주세요. 부수적인 방송 요소는 제외하고 '큐시트만' 작성해주시면 됩니다 \n\n` +
               `[제품 정보]\n${productInfo}\n\n` +
               `요구사항:\n` +
               `- 방송 시간: 60분\n` +
               `- 시간대: 오전 11시\n` +
               `- 형식: 네이버 라이브 쇼핑\n` +
-              `- 프로그램명: 가전주부의 핫IT슈\n` +
+              `- 프로그램명: 트리즈 라이브방송 테스트\n` +
               (highlight
                 ? `- 방송에서 특히 강조해야 할 포인트: ${highlight}\n`
                 : ``) +
@@ -481,7 +481,6 @@ app.post('/api/generate-script', upload.single('pdf'), async (req, res) => {
               `4. 구체적인 시연 준비물과 분량\n` +
               `5. 중간 퀴즈 이벤트 (4지선다)\n` +
               `6. 제품 비교 섹션\n` +
-              `7. VMD와 의상 설정\n\n` +
               `가이드라인에 맞춰 완전한 큐시트를 작성해주세요.`,
           },
         ],

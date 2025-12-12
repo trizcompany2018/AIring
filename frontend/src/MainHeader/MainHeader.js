@@ -1,5 +1,5 @@
 import Logo from "./main_logo2.png";
-import WhiteLogo from "./white_logo2.png"
+import WhiteLogo from "./logo2.png"
 import TrizLogo from './triz.png'
 import Logout from "./logout.png";
 import Group from './Group.png'
@@ -9,21 +9,20 @@ import { useNavigate } from "react-router-dom";
 
 const ContainerHeader = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  padding: 24px 40px;
-  width: 100vw;
+background-color: #FFFFFF;
+height: 50px;
   
 `;
 const Image = styled.img`
   height: 28px;
 `;
 const LogoutContainer = styled.div`
-  background-color: red;
   border: none;
   background: none;
   cursor: pointer;
-  background-color: white;
+  background-color: #F4F1EB;
   border-radius: 100%;
   width: 32px;
   height: 32px;
@@ -35,6 +34,14 @@ const LogoutImage = styled.img`
   width: 20px;
   height: 20px;
 `;
+const Header = styled.div`
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 80vw;
+
+`
 const MainHeader = ({ onLogout, page }) => {
 
   const navigate = useNavigate();
@@ -47,6 +54,7 @@ const MainHeader = ({ onLogout, page }) => {
 
   return (
     <ContainerHeader>
+      <Header>
       {page === "main_w" ? (
         <Image src={WhiteLogo} /> 
       ) : page === "main_g" ? (
@@ -57,6 +65,7 @@ const MainHeader = ({ onLogout, page }) => {
       <LogoutContainer onClick={handleLogout}>
         {page == "login" ?<LogoutImage src={Group} />  :<LogoutImage src={Logout} /> }
       </LogoutContainer>
+      </Header>
     </ContainerHeader>
   );
 };

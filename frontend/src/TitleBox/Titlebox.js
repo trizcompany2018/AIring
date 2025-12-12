@@ -14,7 +14,6 @@ const PageSubTitle = styled.p`
 
 const BoxContainer = styled.div`
 
-width: 100vw;
 display: flex;
 justify-content: center;
 align-items: center;
@@ -24,7 +23,8 @@ align-items: center;
 
 
 const BoxHeader = styled.div`
-    width: 90vw;
+
+width: 80vw;
 
 `;
 
