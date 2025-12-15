@@ -530,38 +530,41 @@ app.post(
       const pdfBase64 = req.file.buffer.toString("base64");
 
       const response = await callClaudeWithTimeout({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 1500,
-        temperature: 0.2,
-        system: `
+  model: "claude-sonnet-4-20250514",
+  max_tokens: 1500,
+  temperature: 0.2,
+  system: `
 당신은 라이브커머스 및 방송 큐시트 제작 전문가입니다.
 첨부된 PDF가 이미지 기반이라면 스스로 텍스트를 추출한 뒤,
 제품 정보와 강점을 방송용으로 이해하기 쉽게 요약하세요.
 `,
-        messages: [
-          {
-            role: "user",
-            content: [
-              {
-                type: "input_file",
-                media_type: "application/pdf",
-                data: pdfBase64
-              },
-              {
-                type: "text",
-                text: `
+  messages: [
+    {
+      role: "user",
+      content: [
+        {
+          type: "document",
+          source: {
+            type: "base64",
+            media_type: "application/pdf",
+            data: pdfBase64
+          }
+        },
+        {
+          type: "text",
+          text: `
 이 자료를 바탕으로 아래 형식으로 정리해줘.
 
-1. 제품 개요 (한 문단)
-2. 핵심 스펙 요약 (불릿)
+1. 제품 개요
+2. 핵심 스펙 요약
 3. 차별화 강점 3~5가지
-4. 방송 멘트로 바로 읽을 수 있는 문장
+4. 방송 멘트용 문장
 `
-              }
-            ]
-          }
-        ]
-      });
+        }
+      ]
+    }
+  ]
+});
 
       const summary =
         response.content?.[0]?.text || "요약 결과가 없습니다.";
