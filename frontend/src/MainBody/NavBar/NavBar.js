@@ -62,13 +62,23 @@ const NavBar = () => {
         setClickState(!clickState)
     }
 
-    const handleSummaryClick = () =>{
+    const handleSummaryClick = () => {
 
-        navigate('/summary'); 
+        navigate('/summary');
 
     }
-    const handleWritingClick = () =>{
+    const handleWritingClick = () => {
         navigate('/main')
+
+    }
+
+    const handleGemini = () => {
+        window.open("https://gemini.google.com/?hl=ko", "_blank", "noopener,noreferrer");
+    }
+
+    const handleGPT = () => {
+        window.open("https://chatgpt.com/", "_blank", "noopener,noreferrer");
+
 
     }
 
@@ -91,11 +101,11 @@ const NavBar = () => {
                 <MenuIcon src={schedule} />
                 {clickState ? <Text>Schedule</Text> : null}
             </MenuContainer>
-            <MenuContainer isOpen={clickState}>
+            <MenuContainer isOpen={clickState} onClick={(handleGemini)}>
                 <MenuIcon src={gemini} />
-                {clickState ? <Text>Gemini</Text> : null}
+                {clickState ? <Text>Nanobanana</Text> : null}
             </MenuContainer>
-            <MenuContainer isOpen={clickState}>
+            <MenuContainer isOpen={clickState} onClick={(handleGPT)}>
                 <MenuIcon src={gpt} />
                 {clickState ? <Text>ChatGPT</Text> : null}
             </MenuContainer>

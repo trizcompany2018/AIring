@@ -2,7 +2,6 @@
 import "../App.css";
 import styled from "styled-components";
 import NavBar from "../MainBody/NavBar/NavBar";
-
 import BodyBox from "./BodyBox";
 
 

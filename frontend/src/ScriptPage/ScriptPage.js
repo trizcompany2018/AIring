@@ -38,12 +38,12 @@ const BoxContainer = styled.div`
 `;
 
 const BoxHeader = styled.div`
-  width: 90vw;
+  width: 80vw;
 `;
 
 
 const Box = styled.div`
-  width: 90vw;
+  width: 80vw;
   background: #fff;
   border-radius: 20px;
   padding: 40px;
@@ -121,7 +121,7 @@ margin-bottom: 10px;
 const TextBox = styled.pre`
 
 margin: 10px;
-width: 80vw;
+width: 70vw;
 font-family: "Pretendard";
 font-size: 14px;
 
