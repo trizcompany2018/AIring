@@ -582,24 +582,6 @@ app.post(
 );
 
 
-      const summary =
-        response.content?.[0]?.text || "요약 결과가 없습니다.";
-
-      return respond.json(200, {
-        success: true,
-        summary
-      });
-
-    } catch (err) {
-      console.error(err);
-      return respond.json(500, {
-        success: false,
-        error: "PDF 요약 생성 실패"
-      });
-    }
-  }
-);
-
 
 // ===== 서버 시작 =====
 app.listen(PORT, () => {
