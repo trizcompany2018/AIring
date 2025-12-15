@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-
+import Body from './Summary/Body.js'
 import Login from './LogIn/Login.js';
 import MainBody from './MainBody/MainBody.js';
 import ScriptPage from './ScriptPage/ScriptPage.js';
@@ -25,6 +25,12 @@ function App() {
           path="/result"
           element={
             isLoggedIn ? <ScriptPage onLogout={() => setIsLoggedIn(false)} /> : <Navigate to="/" replace />
+          }
+        />
+                <Route
+          path="/summary"
+          element={
+            isLoggedIn ? <Body onLogout={() => setIsLoggedIn(false)} /> : <Navigate to="/" replace />
           }
         />
       </Routes>

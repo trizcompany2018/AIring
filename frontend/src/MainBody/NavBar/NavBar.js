@@ -4,8 +4,10 @@ import schedule from './icon_Schedule.png'
 import writing from './icon_Writing_on.png'
 import gemini from './Vector.png'
 import gpt from './ChatGPT-Logo 1.png'
+import document from './document.png'
 import logo from '../../MainHeader/white_logo2.png'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const NavContainer = styled.div`
 
@@ -54,34 +56,48 @@ const LogoImage = styled.img`
 const NavBar = () => {
 
     const [clickState, setClickState] = useState(false);
+    const navigate = useNavigate();
 
     const handleClick = () => {
         setClickState(!clickState)
     }
 
+    const handleSummaryClick = () =>{
+
+        navigate('/summary'); 
+
+    }
+    const handleWritingClick = () =>{
+        navigate('/main')
+
+    }
 
     return (
 
         <NavContainer isOpen={clickState}>
             <MenuContainer isOpen={clickState} onClick={handleClick}>
-                <MenuIcon src={menu}  />
-                {clickState?<Text><LogoImage src={logo}/></Text>:null}
+                <MenuIcon src={menu} />
+                {clickState ? <Text><LogoImage src={logo} /></Text> : null}
+            </MenuContainer>
+            <MenuContainer isOpen={clickState} onClick={handleSummaryClick}>
+                <MenuIcon src={document} />
+                {clickState ? <Text>Summary</Text> : null}
+            </MenuContainer>
+            <MenuContainer isOpen={clickState} onClick={handleWritingClick}>
+                <MenuIcon src={writing} />
+                {clickState ? <Text>Writing</Text> : null}
             </MenuContainer>
             <MenuContainer isOpen={clickState}>
                 <MenuIcon src={schedule} />
-                {clickState?<Text>Schedule</Text>:null}
-            </MenuContainer>
-            <MenuContainer isOpen={clickState}>
-                <MenuIcon src={writing} />
-                {clickState?<Text>Writing</Text>:null}
+                {clickState ? <Text>Schedule</Text> : null}
             </MenuContainer>
             <MenuContainer isOpen={clickState}>
                 <MenuIcon src={gemini} />
-                {clickState?<Text>Gemini</Text>:null}
+                {clickState ? <Text>Gemini</Text> : null}
             </MenuContainer>
             <MenuContainer isOpen={clickState}>
                 <MenuIcon src={gpt} />
-                {clickState?<Text>ChatGPT</Text>:null}
+                {clickState ? <Text>ChatGPT</Text> : null}
             </MenuContainer>
         </NavContainer>
 
