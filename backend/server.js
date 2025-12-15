@@ -545,25 +545,42 @@ app.post(
               {
                 type: "input_file",
                 media_type: "application/pdf",
-                data: pdfBase64 
+                data: pdfBase64
               },
               {
                 type: "text",
                 text: `
-                    이 자료를 바탕으로 아래 형식으로 정리해줘.
+이 자료를 바탕으로 아래 형식으로 정리해줘.
 
-                    1. 제품 개요 (한 문단)
-                    2. 핵심 스펙 요약 (불릿)
-                    3. 차별화 강점 3~5가지
-                    4. 방송 멘트로 바로 읽을 수 있는 문장
-
-                    ※ 방송 큐시트 작성자가 바로 사용할 수 있도록 작성할 것
-                    `
+1. 제품 개요 (한 문단)
+2. 핵심 스펙 요약 (불릿)
+3. 차별화 강점 3~5가지
+4. 방송 멘트로 바로 읽을 수 있는 문장
+`
               }
             ]
           }
         ]
       });
+
+      const summary =
+        response.content?.[0]?.text || "요약 결과가 없습니다.";
+
+      return respond.json(200, {
+        success: true,
+        summary
+      });
+
+    } catch (err) {
+      console.error(err);
+      return respond.json(500, {
+        success: false,
+        error: "요약 생성 실패"
+      });
+    }
+  }
+);
+
 
       const summary =
         response.content?.[0]?.text || "요약 결과가 없습니다.";
