@@ -514,7 +514,7 @@ app.post('/api/generate-script', upload.single('pdf'), async (req, res) => {
 });
 
 app.post(
-  "/api/generate-cuesheet",
+  "/api/generate-summary",
   upload.single("pdf"),
   async (req, res) => {
     const respond = respondOnce(res);
