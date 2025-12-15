@@ -33,7 +33,7 @@ app.get("/health", (req, res) => {
 // 파일 업로드 설정 (PDF 10MB 제한)
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 10 * 1024 * 1024 },
+  limits: { fileSize: 20 * 1024 * 1024 },
 });
 
 // ===== Anthropic 초기화 =====
