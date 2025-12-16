@@ -124,6 +124,10 @@ margin: 10px;
 width: 70vw;
 font-family: "Pretendard";
 font-size: 14px;
+  white-space: pre-wrap;      /* 줄바꿈 유지 + 자동 줄바꿈 */
+  word-break: break-word;     /* 긴 단어도 강제 줄바꿈 */
+  overflow-wrap: break-word;  /* 브라우저 호환 */
+
 
 `
 const ScriptPage = ({onLogout}) => {

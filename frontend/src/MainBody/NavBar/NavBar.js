@@ -5,6 +5,7 @@ import writing from './icon_Writing_on.png'
 import gemini from './Vector.png'
 import gpt from './ChatGPT-Logo 1.png'
 import document from './document.png'
+import lab from './tube.png'
 import logo from '../../MainHeader/white_logo2.png'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -26,6 +27,7 @@ height: 50px;
 display: flex;
 align-items: center;
 margin-bottom: 25px;
+cursor: pointer;
 
 `
 const MenuIcon = styled.img`
@@ -79,7 +81,11 @@ const NavBar = () => {
     const handleGPT = () => {
         window.open("https://chatgpt.com/", "_blank", "noopener,noreferrer");
 
+    }
 
+    const handleImageFX = () => {
+
+        window.open("https://labs.google/fx/ko/tools/image-fx", "_blank", "noopener,noreferrer");
     }
 
     return (
@@ -108,6 +114,10 @@ const NavBar = () => {
             <MenuContainer isOpen={clickState} onClick={(handleGPT)}>
                 <MenuIcon src={gpt} />
                 {clickState ? <Text>ChatGPT</Text> : null}
+            </MenuContainer>
+            <MenuContainer isOpen={clickState} onClick={(handleImageFX)}>
+                <MenuIcon src={lab} />
+                {clickState ? <Text>ImageFX</Text> : null}
             </MenuContainer>
         </NavContainer>
 

@@ -11,7 +11,7 @@ const ContainerHeader = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-background-color: ${({ page }) => (page === "login" ? "#F4F1EB" : "white")};
+background-color: ${({ page }) => (page === "main_w" ? "white" : "#F4F1EB")};
 height: 50px;
   
 `;
