@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../App.css";
 import Footer from '../Footer/Footer.js'
-
+import ReactMarkdown from 'react-markdown'
 
 const Container = styled.div`
   min-height: 100vh;
@@ -178,7 +178,7 @@ const ScriptPage = ({onLogout}) => {
                     <Box>
                         <ScriptContainer>
                             <ScriptHeader>📝 생성된 방송 대본</ScriptHeader>
-                            <TextBox>{script}</TextBox>
+                            <TextBox><ReactMarkdown>{script}</ReactMarkdown></TextBox>
                         </ScriptContainer>
 
                     </Box>
