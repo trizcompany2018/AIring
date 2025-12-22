@@ -14,13 +14,12 @@ const PageSubTitle = styled.p`
 
 const BoxContainer = styled.div`
 
+margin-top: 2rem;
 display: flex;
 justify-content: center;
 align-items: center;
 
-
 `
-
 
 const BoxHeader = styled.div`
 
@@ -29,15 +28,14 @@ width: 80vw;
 `;
 
 
-const TitleBox = () => {
+const TitleBox = ({ text }) => {
 
     return (
         <BoxContainer>
             <BoxHeader>
                 <PageTitle>라이브 방송 대본 생성</PageTitle>
                 <PageSubTitle>
-                    제품 정보가 포함된 PDF를 업로드하면 AI가 방송 대본을 자동으로
-                    생성해 드립니다.
+                    {text}
                 </PageSubTitle>
             </BoxHeader>
         </BoxContainer>

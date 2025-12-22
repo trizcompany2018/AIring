@@ -6,6 +6,7 @@ import gemini from './Vector.png'
 import gpt from './ChatGPT-Logo 1.png'
 import document from './document.png'
 import lab from './tube.png'
+import pdfimg from './pdfimg.png'
 import logo from '../../MainHeader/white_logo2.png'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -45,7 +46,7 @@ align-items: center;
 justify-content: left;
 color: #B3FFD2;
 font-weight: 500;
-font-size: 20px;
+font-size: 18px;
 
 `
 
@@ -57,7 +58,7 @@ const LogoImage = styled.img`
 
 const NavBar = () => {
 
-    const [clickState, setClickState] = useState(false);
+    const [clickState, setClickState] = useState(true);
     const navigate = useNavigate();
 
     const handleClick = () => {
@@ -86,6 +87,11 @@ const NavBar = () => {
     const handleImageFX = () => {
 
         window.open("https://labs.google/fx/ko/tools/image-fx", "_blank", "noopener,noreferrer");
+    }
+
+    const handleNotebookLM = () =>{
+
+        window.open("https://notebooklm.google/?hl=ko", "_blank", "noopener,noreferrer")
     }
 
     return (
@@ -118,6 +124,10 @@ const NavBar = () => {
             <MenuContainer isOpen={clickState} onClick={(handleImageFX)}>
                 <MenuIcon src={lab} />
                 {clickState ? <Text>ImageFX</Text> : null}
+            </MenuContainer>
+            <MenuContainer isOpen={clickState} onClick={(handleNotebookLM)}>
+                <MenuIcon src={pdfimg} />
+                {clickState ? <Text>NotebookLM</Text> : null}
             </MenuContainer>
         </NavContainer>
 

@@ -225,30 +225,30 @@ const BodyBox = ({ onLogout }) => {
 
     // 테스트용 임시 api 요청
 
-    const generateTest = async () => {
-        setLoading(true);
-        setError("");
+    // const generateTest = async () => {
+    //     setLoading(true);
+    //     setError("");
 
-        try {
-            const response = await axios.post(
-                "https://airing-eabn.onrender.com/api/test-script",
-                { question: "리버풀 FC의 빌 샹클리 이후 역대 감독을 제임 기간과 이룩한 업적과 함께 알려줘" }
-            );
+    //     try {
+    //         const response = await axios.post(
+    //             "https://airing-eabn.onrender.com/api/test-script",
+    //             { question: "리버풀 FC의 빌 샹클리 이후 역대 감독을 제임 기간과 이룩한 업적과 함께 알려줘" }
+    //         );
 
-            if (response.data.success) {
-                const scriptText = response.data.script || "";
+    //         if (response.data.success) {
+    //             const scriptText = response.data.script || "";
 
-                navigate("/result", { state: { script: scriptText } });
-            } else {
-                setError("대본 생성에 실패했습니다.");
-            }
-        } catch (err) {
-            setError("서버 연결에 실패했습니다. 백엔드 서버가 실행 중인지 확인해주세요.");
-            console.error(err);
-        } finally {
-            setLoading(false);
-        }
-    };
+    //             navigate("/result", { state: { script: scriptText } });
+    //         } else {
+    //             setError("대본 생성에 실패했습니다.");
+    //         }
+    //     } catch (err) {
+    //         setError("서버 연결에 실패했습니다. 백엔드 서버가 실행 중인지 확인해주세요.");
+    //         console.error(err);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
 
 
     // 초기화
@@ -264,7 +264,8 @@ const BodyBox = ({ onLogout }) => {
         <BoxContainer>
             <MainHeader onLogout={onLogout} page="main_w" />
 
-            <TitleBox />
+            <TitleBox text="제품 정보가 포함된 PDF를 업로드하면 AI가 방송 대본을 자동으로
+                    생성해 드립니다."/>
 
             <Main>
                 <BoxWrapper>

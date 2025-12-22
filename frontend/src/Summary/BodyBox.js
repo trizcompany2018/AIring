@@ -144,7 +144,7 @@ const BodyBox = ({ onLogout }) => {
         setError("");
 
         const formData = new FormData();
-        formData.append("pdf", file); // ← 여기 중요 (백엔드 key 이름 확인!)
+        formData.append("pdf", file);
 
         try {
             const response = await axios.post(
@@ -186,7 +186,8 @@ const BodyBox = ({ onLogout }) => {
         <BoxContainer>
             <MainHeader onLogout={onLogout} page="main_w" />
 
-            <TitleBox />
+            <TitleBox text="제품 정보가 포함된 PDF를 업로드하면 AI가 제품 정보 요약본을 자동으로
+                    생성해 드립니다."/>
 
             <Main>
                 <BoxWrapper>
