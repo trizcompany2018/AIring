@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Body from './Summary/Body.js'
+import Event from './Event/Body.js'
 import Login from './LogIn/Login.js';
 import MainBody from './MainBody/MainBody.js';
 import ScriptPage from './ScriptPage/ScriptPage.js';
@@ -27,10 +28,16 @@ function App() {
             isLoggedIn ? <ScriptPage onLogout={() => setIsLoggedIn(false)} /> : <Navigate to="/" replace />
           }
         />
-                <Route
+        <Route
           path="/summary"
           element={
             isLoggedIn ? <Body onLogout={() => setIsLoggedIn(false)} /> : <Navigate to="/" replace />
+          }
+        />
+        <Route
+          path="/event"
+          element={
+            isLoggedIn ? <Event onLogout={() => setIsLoggedIn(false)} /> : <Navigate to="/" replace />
           }
         />
       </Routes>

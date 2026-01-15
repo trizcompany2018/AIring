@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import Overlay from "./Overlay";
+import Overlay from "../MainBody/Overlay";
 import TitleBox from "../TitleBox/Titlebox";
 import Footer from '../Footer/Footer.js'
 import Cloud from '../upload.png'
@@ -7,39 +7,6 @@ import MainHeader from "../MainHeader/MainHeader";
 import { useState, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
-const BoxWrapper = styled.div`
-  position: relative;
-`;
-
-
-const BoxContainer = styled.div`
-
-display: flex;
-flex-direction: column;
-align-tiems: center;s
-
-`
-const Main = styled.div`
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-top: 48px;
-`;
-
-const Box = styled.div`
-  width: 80vw;
-  background: #fff;
-  border-radius: 20px;
-  padding-left: 40px; 
-  padding-right: 40px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
-  border: 2px solid #05DA88;
-  display: flex;
-  flex-direction: column;
-padding-top: 40px;
-`;
 
 
 const Form = styled.form`
@@ -85,6 +52,41 @@ const SelectControl = styled.select`
   font-size: 14px;
   font-weight: 400;
 `;
+
+
+const BoxWrapper = styled.div`
+  position: relative;
+`;
+
+
+const BoxContainer = styled.div`
+
+display: flex;
+flex-direction: column;
+align-tiems: center;
+
+`
+const Main = styled.div`
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 48px;
+`;
+
+const Box = styled.div`
+  width: 80vw;
+  background: #fff;
+  border-radius: 20px;
+  padding-left: 40px; 
+  padding-right: 40px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+  border: 2px solid #05DA88;
+  display: flex;
+  flex-direction: column;
+padding-top: 40px;
+`;
+
 
 const UploadBox = styled.div`
   border-radius: 16px;
@@ -158,12 +160,7 @@ const BodyBox = ({ onLogout }) => {
     const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-    const [highlight, setHighlight] = useState('');
-    const [avoidLanguage, setAvoidLanguage] = useState('');
-    const [category, setCategory] = useState('');
-    const [programTitle, setProgramTitle] = useState('');
-    const [tone, setTone] = useState('기본');
-    const [model, setModel] = useState('claude-sonnet-4');
+    const [eventType, setEventType] = useState('')
 
     const fileInputRef = useRef(null);
     const navigate = useNavigate();
@@ -194,17 +191,11 @@ const BodyBox = ({ onLogout }) => {
         setError("");
 
         const formData = new FormData();
-        formData.append("pdf", file); // 기존 PDF
-        formData.append("highlight", highlight);            // 🔥 강조포인트
-        formData.append("avoidLanguage", avoidLanguage);    // 🔥 지양 언어
-        formData.append("tone", tone);                      // 🔥 방송톤
-        formData.append("model", model);                    // 🔥 모델 선택
-        formData.append("category", category);
-        formData.append("programtitle", programTitle);
+        formData.append("pdf", file);
 
         try {
             const response = await axios.post(
-                "https://airing-eabn.onrender.com/api/generate-script",
+                "https://airing-eabn.onrender.com/api/generate-summary",
                 formData,
                 {
                     headers: {
@@ -214,10 +205,11 @@ const BodyBox = ({ onLogout }) => {
             );
 
             if (response.data.success) {
-                const scriptText = response.data.script || "";
+                const scriptText = response.data.summary || "";
                 navigate("/result", { state: { script: scriptText } });
+                console.log("FULL RESPONSE:", response.data);
             } else {
-                setError("대본 생성에 실패했습니다.");
+                setError("요약본 생성에 실패했습니다.");
             }
         } catch (err) {
             setError("서버 연결에 실패했습니다. 백엔드 서버가 실행 중인지 확인해주세요.");
@@ -226,33 +218,6 @@ const BodyBox = ({ onLogout }) => {
             setLoading(false);
         }
     };
-
-    // 테스트용 임시 api 요청
-
-    // const generateTest = async () => {
-    //     setLoading(true);
-    //     setError("");
-
-    //     try {
-    //         const response = await axios.post(
-    //             "https://airing-eabn.onrender.com/api/test-script",
-    //             { question: "리버풀 FC의 빌 샹클리 이후 역대 감독을 제임 기간과 이룩한 업적과 함께 알려줘" }
-    //         );
-
-    //         if (response.data.success) {
-    //             const scriptText = response.data.script || "";
-
-    //             navigate("/result", { state: { script: scriptText } });
-    //         } else {
-    //             setError("대본 생성에 실패했습니다.");
-    //         }
-    //     } catch (err) {
-    //         setError("서버 연결에 실패했습니다. 백엔드 서버가 실행 중인지 확인해주세요.");
-    //         console.error(err);
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
 
 
     // 초기화
@@ -268,8 +233,7 @@ const BodyBox = ({ onLogout }) => {
         <BoxContainer>
             <MainHeader onLogout={onLogout} page="main_w" />
 
-            <TitleBox title="라이브 방송 대본 생성" text="제품 정보가 포함된 PDF를 업로드하면 AI가 방송 대본을 자동으로
-                    생성해 드립니다."/>
+            <TitleBox title="라이브 방송 이벤트 생성" text="제품 정보가 포함된 PDF를 업로드하면 AI가 제품 정보 기반 이벤트를 생성합니다" />
 
             <Main>
                 <BoxWrapper>
@@ -279,72 +243,21 @@ const BodyBox = ({ onLogout }) => {
                                 <FormGroup>
                                     <FormLabel>방송 카테고리</FormLabel>
                                     <SelectControl
-                                        value={category}
-                                        onChange={(e) => setCategory(e.target.value)}
+                                        value={eventType}
+                                        onChange={(e) => setEventType(e.target.value)}
                                     >
-                                        <option value="전자제품">전자제품</option>
-                                        <option value="푸드">푸드</option>
-                                        <option value="패션">패션</option>
+                                        <option value="방송 한정 사은품 제공">방송 한정 사은품 제공</option>
+                                        <option value="선착순 구매 인증 이벤트">선착순 구매 인증 이벤트</option>
+                                        <option value="추첨 이벤트">추첨 이벤트</option>
+                                        <option value="댓글 소통왕 이벤트">댓글 소통왕 이벤트</option>
+                                        <option value="리뷰 이벤트">리뷰 이벤트</option>
                                     </SelectControl>
                                 </FormGroup>
 
-                                <FormGroup>
-                                    <FormLabel>프로그램명</FormLabel>
-                                    <FormControl
-                                        id="avoid-language"
-                                        type="text"
-                                        placeholder="예시 : 핫IT슈, 백주부의 라방"
-                                        value={avoidLanguage}
-                                        onChange={(e) => setProgramTitle(e.target.value)}
-                                    />
-                                </FormGroup>
+                                
                             </FormRow>
-                            <FormGroup>
-                                <FormLabel>강조 포인트</FormLabel>
-                                <FormControl
-                                    id="highlight"
-                                    type="text"
-                                    placeholder="예시 : 라이브 환경 설명, 사용 편의성 강조"
-                                    value={highlight}
-                                    onChange={(e) => setHighlight(e.target.value)}
-                                />
-                            </FormGroup>
-
-                            <FormGroup>
-                                <FormLabel>사용 지양 언어</FormLabel>
-                                <FormControl
-                                    id="avoid-language"
-                                    type="text"
-                                    placeholder="예시 : 과한 최상급 표현, 경쟁사 비하 표현 지양"
-                                    value={avoidLanguage}
-                                    onChange={(e) => setAvoidLanguage(e.target.value)}
-                                />
-                            </FormGroup>
                         </Form>
 
-                        <FormRow>
-                            <FormGroup>
-                                <FormLabel>방송톤</FormLabel>
-                                <SelectControl
-                                    value={tone}
-                                    onChange={(e) => setTone(e.target.value)}
-                                >
-                                    <option value="기본">기본</option>
-                                    <option value="간결">간결</option>
-                                    <option value="격식">격식</option>
-                                </SelectControl>
-                            </FormGroup>
-
-                            <FormGroup>
-                                <FormLabel>사용모델</FormLabel>
-                                <SelectControl
-                                    value={model}
-                                    onChange={(e) => setModel(e.target.value)}>
-                                    <option value="claude-sonnet-4">claude-sonnet-4</option>
-                                    {/* 나중에 모델 추가하면 option만 늘리면 됨 */}
-                                </SelectControl>
-                            </FormGroup>
-                        </FormRow>
                         {/* PDF 업로드 영역 */}
 
                         <UploadBox onClick={handleUploadBoxClick}>
@@ -378,7 +291,7 @@ const BodyBox = ({ onLogout }) => {
                                 disabled={!file || loading}
                                 className="generate-btn"
                             >
-                                {loading ? "생성 중... (약 2분 소요)" : "대본 생성하기"}
+                                {loading ? "요약 중... (약 2분 소요)" : "요약하기"}
                             </BtnPrimary>
                             <BtnSecondary onClick={handleReset} className="reset-btn">
                                 초기화하기

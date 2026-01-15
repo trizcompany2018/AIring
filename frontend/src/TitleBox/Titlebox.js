@@ -28,12 +28,12 @@ width: 80vw;
 `;
 
 
-const TitleBox = ({ text }) => {
+const TitleBox = ({ title, text }) => {
 
     return (
         <BoxContainer>
             <BoxHeader>
-                <PageTitle>라이브 방송 대본 생성</PageTitle>
+                <PageTitle>{title}</PageTitle>
                 <PageSubTitle>
                     {text}
                 </PageSubTitle>

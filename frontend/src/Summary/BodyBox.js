@@ -186,7 +186,7 @@ const BodyBox = ({ onLogout }) => {
         <BoxContainer>
             <MainHeader onLogout={onLogout} page="main_w" />
 
-            <TitleBox text="제품 정보가 포함된 PDF를 업로드하면 AI가 제품 정보 요약본을 자동으로
+            <TitleBox title="제품 정보 요약 페이지" text="제품 정보가 포함된 PDF를 업로드하면 AI가 제품 정보 요약본을 자동으로
                     생성해 드립니다."/>
 
             <Main>

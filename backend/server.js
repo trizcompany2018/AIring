@@ -427,6 +427,8 @@ app.post('/api/generate-script', upload.single('pdf'), async (req, res) => {
       highlight = '',
       avoidLanguage = '',
       tone = '기본',
+      category='',
+      programtitle='',
       model, // 선택 모델 (없으면 기본 MODEL_ID 사용)
     } = req.body;
 
