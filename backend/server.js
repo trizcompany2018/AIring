@@ -427,8 +427,8 @@ app.post('/api/generate-script', upload.single('pdf'), async (req, res) => {
       highlight = '',
       avoidLanguage = '',
       tone = '기본',
-      category='',
-      programtitle='',
+      category = '',
+      programtitle = '',
       model, // 선택 모델 (없으면 기본 MODEL_ID 사용)
     } = req.body;
 
@@ -452,12 +452,13 @@ app.post('/api/generate-script', upload.single('pdf'), async (req, res) => {
         max_tokens: 4500,
         temperature: 0.7,
         system:
-          `당신은 네이버 라이브 쇼핑 방송 대본 작성 전문가입니다.\n\n` +
+          `당신은 라이브 쇼핑 방송 대본 작성 전문가입니다.\n\n` +
+          `금일 방송의 방송 카테고리는 ${category}.\n\n` +
           `다음 가이드라인을 반드시 준수하여 큐시트를 작성해주세요:\n${BROADCAST_GUIDELINES}\n\n` +
           `위 가이드라인을 엄격히 따라 실제 방송에서 사용 가능한 전문적인 큐시트를 작성해주세요.\n` +
           `반드시 가이드라인의 모든 요소를 포함하여 작성하세요.\n` +
           `상품의 혜택이나 가격 요소는 (혜택소개), (가격소개) 등으로 표시만 하고 구체 금액은 생략하세요.\n` +
-          `방송 진행 일정은 12월입니다. 계절감에 맞는 진행을 해주세요.\n` +
+          `방송 진행 일정은 1월입니다. 계절감에 맞는 진행을 해주세요.\n` +
           `방송 전반의 톤앤매너:\n${toneGuide}\n` +
           (avoidLanguage
             ? `다음 표현이나 어투는 사용을 지양하세요: ${avoidLanguage}\n`
@@ -469,6 +470,7 @@ app.post('/api/generate-script', upload.single('pdf'), async (req, res) => {
               `다음 제품 정보를 바탕으로 60분 라이브 방송 큐시트를 작성해주세요. 부수적인 방송 요소는 제외하고 '큐시트만' 작성해주시면 됩니다 \n\n` +
               `[제품 정보]\n${productInfo}\n\n` +
               `요구사항:\n` +
+              `- 방송명: ${programtitle}\n` +
               `- 방송 시간: 60분\n` +
               `- 시간대: 오전 11시\n` +
               `- 형식: 네이버 라이브 쇼핑\n` +
@@ -532,40 +534,40 @@ app.post(
       const pdfBase64 = req.file.buffer.toString("base64");
 
       const response = await callClaudeWithTimeout({
-  model: "claude-sonnet-4-20250514",
-  max_tokens: 1500,
-  temperature: 0.2,
-  system: `
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1500,
+        temperature: 0.2,
+        system: `
 당신은 라이브커머스 및 방송 큐시트 제작 전문가입니다.
 첨부된 PDF가 이미지 기반이라면 스스로 텍스트를 추출한 뒤,
 제품 정보와 강점을 방송용으로 이해하기 쉽게 요약하세요.
 `,
-  messages: [
-    {
-      role: "user",
-      content: [
-        {
-          type: "document",
-          source: {
-            type: "base64",
-            media_type: "application/pdf",
-            data: pdfBase64
-          }
-        },
-        {
-          type: "text",
-          text: `
+        messages: [
+          {
+            role: "user",
+            content: [
+              {
+                type: "document",
+                source: {
+                  type: "base64",
+                  media_type: "application/pdf",
+                  data: pdfBase64
+                }
+              },
+              {
+                type: "text",
+                text: `
 이 자료를 바탕으로 아래 형식으로 정리해줘.
 
 1. 제품 개요(카탈로그 내 정보에 있는 각 제품의 요약 - 가격, 제품명, 스펙 등)
 2. 차별화 강점 3가지 이상
 
 `
-        }
-      ]
-    }
-  ]
-});
+              }
+            ]
+          }
+        ]
+      });
 
       const summary =
         response.content?.[0]?.text || "요약 결과가 없습니다.";

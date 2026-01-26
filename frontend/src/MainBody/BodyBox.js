@@ -161,7 +161,7 @@ const BodyBox = ({ onLogout }) => {
     const [highlight, setHighlight] = useState('');
     const [avoidLanguage, setAvoidLanguage] = useState('');
     const [category, setCategory] = useState('');
-    const [programTitle, setProgramTitle] = useState('');
+    const [programtitle, setProgramTitle] = useState('');
     const [tone, setTone] = useState('기본');
     const [model, setModel] = useState('claude-sonnet-4');
 
@@ -200,7 +200,7 @@ const BodyBox = ({ onLogout }) => {
         formData.append("tone", tone);                      // 🔥 방송톤
         formData.append("model", model);                    // 🔥 모델 선택
         formData.append("category", category);
-        formData.append("programtitle", programTitle);
+        formData.append("programtitle", programtitle);
 
         try {
             const response = await axios.post(
@@ -291,10 +291,10 @@ const BodyBox = ({ onLogout }) => {
                                 <FormGroup>
                                     <FormLabel>프로그램명</FormLabel>
                                     <FormControl
-                                        id="avoid-language"
+                                        id="programtitle"
                                         type="text"
                                         placeholder="예시 : 핫IT슈, 백주부의 라방"
-                                        value={avoidLanguage}
+                                        value={programtitle}
                                         onChange={(e) => setProgramTitle(e.target.value)}
                                     />
                                 </FormGroup>
