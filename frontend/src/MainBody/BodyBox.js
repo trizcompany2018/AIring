@@ -282,7 +282,7 @@ const BodyBox = ({ onLogout }) => {
                                         value={category}
                                         onChange={(e) => setCategory(e.target.value)}
                                     >
-                                        <option value="전자제품">전자제품</option>
+                                        <option value="전자제품">전자 제품</option>
                                         <option value="푸드">푸드</option>
                                         <option value="패션">패션</option>
                                     </SelectControl>
