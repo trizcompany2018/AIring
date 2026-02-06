@@ -63,7 +63,7 @@ const MainHeader = ({ onLogout, page }) => {
         <Image src={TrizLogo} />
       )}
       <LogoutContainer onClick={handleLogout}>
-        {page == "login" ?<LogoutImage src={Group} />  :<LogoutImage src={Logout} /> }
+        {page === "login" ?<LogoutImage src={Group} />  :<LogoutImage src={Logout} /> }
       </LogoutContainer>
       </Header>
     </ContainerHeader>

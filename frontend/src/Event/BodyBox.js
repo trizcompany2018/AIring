@@ -35,14 +35,6 @@ const FormLabel = styled.label`
     margin-bottom: 15px;
 `;
 
-const FormControl = styled.input`
-  height: 48px;
-  padding: 0 14px;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  font-size: 14px;
-  font-weight: 400;
-`;
 
 const SelectControl = styled.select`
   height: 48px;
