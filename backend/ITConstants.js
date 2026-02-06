@@ -246,5 +246,3 @@ IT/디지털
 4. 시연 중심: 말보다 보여주기
 5. 비교 통해 선택 도움: A vs B 명확히
 `;
-
-module.exports = {BROADCAST_GUIDELINES};

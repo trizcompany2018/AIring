@@ -1,5 +1,6 @@
 // server.js
 // Node >= 18 권장 (fetch/AbortController 내장)
+import { BROADCAST_GUIDELINES } from './ITConstants';
 
 const express = require('express');
 const cors = require('cors');
@@ -46,8 +47,6 @@ const anthropic = new Anthropic({
 console.log('[ENV] CLAUDE_API_KEY length:', process.env.CLAUDE_API_KEY?.length || 'undefined');
 console.log('[ENV] ANTHROPIC_MODEL:', MODEL_ID);
 
-// ===== 가이드라인 상수 =====
-const { BROADCAST_GUIDELINES } = require('./ITConstants')
 
 // ===== 헬스체크 =====
 app.get('/ping', (_req, res) => {
