@@ -2,12 +2,13 @@
 // Node >= 18 권장 (fetch/AbortController 내장)
 import { BROADCAST_GUIDELINES } from './ITConstants.js';
 
-const express = require('express');
-const cors = require('cors');
-const multer = require('multer');
-const pdfParse = require('pdf-parse');
-const Anthropic = require('@anthropic-ai/sdk');
-require('dotenv').config();
+import express from 'express';
+import cors from 'cors';
+import multer from 'multer';
+import pdfParse from 'pdf-parse';
+import Anthropic from '@anthropic-ai/sdk';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT ? Number(process.env.PORT) : 5000;
