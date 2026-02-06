@@ -1,6 +1,6 @@
 // server.js
 // Node >= 18 권장 (fetch/AbortController 내장)
-import { BROADCAST_GUIDELINES } from './ITConstants';
+import { BROADCAST_GUIDELINES } from './ITConstants.js';
 
 const express = require('express');
 const cors = require('cors');

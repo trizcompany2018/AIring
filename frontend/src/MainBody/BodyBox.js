@@ -304,7 +304,7 @@ const BodyBox = ({ onLogout }) => {
                                 <FormControl
                                     id="highlight"
                                     type="text"
-                                    placeholder="예시 : 라이브 환경 설명, 사용 편의성 강조"
+                                    placeholder="예시 : 사용 환경 설명, 사용 편의성 강조"
                                     value={highlight}
                                     onChange={(e) => setHighlight(e.target.value)}
                                 />
