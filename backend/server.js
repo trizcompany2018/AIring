@@ -298,10 +298,10 @@ app.post(
         max_tokens: 1500,
         temperature: 0.2,
         system: `
-당신은 라이브커머스 및 방송 큐시트 제작 전문가입니다.
-첨부된 PDF가 이미지 기반이라면 스스로 텍스트를 추출한 뒤,
-제품 정보와 강점을 방송용으로 이해하기 쉽게 요약하세요.
-`,
+          당신은 라이브커머스 및 방송 큐시트 제작 전문가입니다.
+          첨부된 PDF가 이미지 기반이라면 스스로 텍스트를 추출한 뒤,
+          제품 정보와 강점을 방송용으로 이해하기 쉽게 요약하세요.
+          `,
         messages: [
           {
             role: "user",
@@ -317,12 +317,12 @@ app.post(
               {
                 type: "text",
                 text: `
-이 자료를 바탕으로 아래 형식으로 정리해줘.
+                    이 자료를 바탕으로 아래 형식으로 정리해줘.
 
-1. 제품 개요(카탈로그 내 정보에 있는 각 제품의 요약 - 가격, 제품명, 스펙 등)
-2. 차별화 강점 3가지 이상
+                    1. 제품 개요(카탈로그 내 정보에 있는 각 제품의 요약 - 가격, 제품명, 스펙 등)
+                    2. 차별화 강점 3가지 이상
 
-`
+                    `
               }
             ]
           }
@@ -338,11 +338,37 @@ app.post(
       });
 
     } catch (err) {
-      console.error(err);
-      return respond.json(500, {
-        success: false,
-        error: "요약 생성 실패"
-      });
+      console.error("[ERROR] /api/generate-summary:", err);
+
+      // 1. 타임아웃 에러인지 확인 (AbortController에 의해 중단된 경우)
+      const isTimeout = err.name === 'AbortError' || err.message?.includes('aborted');
+
+      // 2. 응답 생성
+      if (!respond.isSent()) {
+        if (isTimeout) {
+          return respond.json(504, {
+            success: false,
+            error: "요청 시간이 초과되었습니다. (서버 타임아웃)",
+            details: "PDF 분석에 시간이 너무 많이 소요됩니다. 용량을 줄여보세요."
+          });
+        }
+
+        // 3. Claude API 자체 에러 처리 (API 키 문제, 할당량 초과 등)
+        if (err.status) { // Anthropic SDK는 에러 시 status를 포함합니다
+          return respond.json(err.status, {
+            success: false,
+            error: `Claude API 오류: ${err.status}`,
+            details: err.message
+          });
+        }
+
+        // 4. 그 외 일반적인 서버 내부 에러
+        return respond.json(500, {
+          success: false,
+          error: err.message || String(err), // 여기서 에러 메시지 전체를 출력합니다.
+          details: err.stack
+        });
+      }
     }
   }
 );
