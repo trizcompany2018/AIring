@@ -166,6 +166,7 @@ app.post('/api/generate-script', upload.single('pdf'), async (req, res) => {
   }, timeoutMs);
 
   try {
+    //server test용 로그
     console.log('======= [DEBUG] Frontend Data Received =======');
     console.log('1. req.body:', JSON.stringify(req.body, null, 2)); // 전체 텍스트 데이터
     console.log('2. req.file:', req.file ? {

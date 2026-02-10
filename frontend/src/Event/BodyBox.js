@@ -146,7 +146,6 @@ display: none;
 
 `
 
-
 const BodyBox = ({ onLogout }) => {
 
     const [file, setFile] = useState(null);
@@ -201,11 +200,30 @@ const BodyBox = ({ onLogout }) => {
                 navigate("/result", { state: { script: scriptText } });
                 console.log("FULL RESPONSE:", response.data);
             } else {
-                setError("요약본 생성에 실패했습니다.");
+                setError(response.data.error || "요약본 생성에 실패했습니다.");
             }
         } catch (err) {
-            setError("서버 연결에 실패했습니다. 백엔드 서버가 실행 중인지 확인해주세요.");
-            console.error(err);
+            // 2. HTTP 에러 (400, 500 등) 발생 시 서버의 응답 메시지 추출
+            let serverErrorMessage = "서버 연결에 실패했습니다.";
+
+            if (err.response) {
+                // 서버가 응답을 보냈으나 2xx 범위를 벗어난 경우 (예: 400, 504, 500)
+                console.log("SERVER ERROR DATA:", err.response.data);
+                serverErrorMessage = err.response.data.error || err.response.data.details || `서버 오류 (${err.response.status})`;
+            } else if (err.request) {
+                // 요청은 나갔으나 응답을 받지 못한 경우 (네트워크 타임아웃 등)
+                serverErrorMessage = "서버로부터 응답이 없습니다. 네트워크 상태를 확인해주세요.";
+            } else {
+                // 설정 과정에서 에러가 발생한 경우
+                serverErrorMessage = err.message;
+            }
+
+            setError(serverErrorMessage);
+            console.error("FULL ERROR OBJECT:", err);
+
+
+
+
         } finally {
             setLoading(false);
         }
@@ -246,7 +264,7 @@ const BodyBox = ({ onLogout }) => {
                                     </SelectControl>
                                 </FormGroup>
 
-                                
+
                             </FormRow>
                         </Form>
 
@@ -290,7 +308,7 @@ const BodyBox = ({ onLogout }) => {
                             </BtnSecondary>
                         </FormActions>
 
-                        {error && <div className="error-message">⚠️ {error}</div>}
+                        {error && <div className="error-message">⚠️ {error}<br /><br /></div>}
 
                     </Box>
                     {loading && <Overlay />}
