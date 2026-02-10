@@ -154,9 +154,6 @@ app.post('/api/test-script', async (req, res) => {
     }
   }
 });
-
-
-
 // ===== 실제 PDF 업로드 버전 =====
 app.post('/api/generate-script', upload.single('pdf'), async (req, res) => {
   const respond = respondOnce(res);
@@ -169,6 +166,15 @@ app.post('/api/generate-script', upload.single('pdf'), async (req, res) => {
   }, timeoutMs);
 
   try {
+    console.log('======= [DEBUG] Frontend Data Received =======');
+    console.log('1. req.body:', JSON.stringify(req.body, null, 2)); // 전체 텍스트 데이터
+    console.log('2. req.file:', req.file ? {
+      originalname: req.file.originalname,
+      size: req.file.size,
+      mimetype: req.file.mimetype
+    } : 'No File Uploaded');
+    console.log('==============================================');
+
     let productInfo = '';
     if (req.file) {
       const pdfData = await pdfParse(req.file.buffer);
