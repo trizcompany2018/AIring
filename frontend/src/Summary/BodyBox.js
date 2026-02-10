@@ -108,7 +108,6 @@ display: none;
 
 `
 
-
 const BodyBox = ({ onLogout }) => {
 
     const [file, setFile] = useState(null);
