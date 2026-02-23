@@ -14,6 +14,7 @@ const app = express();
 const PORT = process.env.PORT ? Number(process.env.PORT) : 5000;
 const TIMEOUT_MS = process.env.CLAUDE_TIMEOUT_MS ? Number(process.env.CLAUDE_TIMEOUT_MS) : 90000;
 console.log('[ENV] CLAUDE_TIMEOUT_MS:', TIMEOUT_MS);
+const sharp = require("sharp")
 
 // ===== 공통 미들웨어 =====
 app.use(cors());
@@ -309,14 +310,22 @@ app.post(
           },
         };
       } else if (mimeType.startsWith("image/")) {
-        // 이미지(PNG, JPG 등)인 경우
+        // 🚨 [여기가 핵심!] 이미지는 sharp를 써서 8000px 이하로 리사이징 후 Base64로 변환
+        // 상세페이지 글씨가 깨지지 않도록 4000~6000px 정도가 적당합니다.
+        const resizedImageBuffer = await sharp(req.file.buffer)
+          .resize({
+            width: 4000,
+            height: 4000,
+            fit: 'inside', // 원본 비율을 유지하면서 가로/세로 중 긴 쪽을 4000px에 맞춤
+            withoutEnlargement: true // 원본이 4000px보다 작으면 억지로 키우지 않음
+          })
+          .toBuffer();
+
+        const resizedBase64 = resizedImageBuffer.toString("base64");
+
         mediaBlock = {
           type: "image",
-          source: {
-            type: "base64",
-            media_type: mimeType, // "image/png", "image/jpeg" 등이 자동으로 들어갑니다
-            data: fileBase64,
-          },
+          source: { type: "base64", media_type: mimeType, data: resizedBase64 },
         };
       } else {
         // 허용되지 않은 파일 형식일 때 차단
