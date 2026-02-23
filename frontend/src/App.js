@@ -22,18 +22,21 @@ function App() {
             isLoggedIn ? <MainBody onLogout={() => setIsLoggedIn(false)} /> : <Navigate to="/" replace />
           }
         />
+        {/* 스크립트 생성 결과 확인 페이지*/}
         <Route
           path="/result"
           element={
             isLoggedIn ? <ScriptPage onLogout={() => setIsLoggedIn(false)} /> : <Navigate to="/" replace />
           }
         />
+        {/* 결과 요약 페이지*/}
         <Route
           path="/summary"
           element={
             isLoggedIn ? <Body onLogout={() => setIsLoggedIn(false)} /> : <Navigate to="/" replace />
           }
         />
+        {/* 방송 이벤트 생성 페이지*/}
         <Route
           path="/event"
           element={

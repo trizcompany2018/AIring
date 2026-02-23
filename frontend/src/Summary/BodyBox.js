@@ -123,11 +123,12 @@ const BodyBox = ({ onLogout }) => {
     // 파일 선택 처리
     const handleFileChange = (e) => {
         const selectedFile = e.target.files[0];
-        if (selectedFile && selectedFile.type === "application/pdf") {
+        const allowedTypes = ["application/pdf", "image/png", "image/jpg", "image/jpeg"]
+        if (selectedFile && allowedTypes.includes(selectedFile.type)) {
             setFile(selectedFile);
             setError("");
         } else {
-            setError("PDF 파일만 업로드 가능합니다.");
+            setError("PDF, png, jpg, jpeg 파일만 업로드 가능합니다.");
             setFile(null);
         }
     };
@@ -135,7 +136,7 @@ const BodyBox = ({ onLogout }) => {
     //대본 생성 요청
     const generateScript = async () => {
         if (!file) {
-            setError("PDF 파일을 선택해주세요.");
+            setError("PDF/이미지(png, jpg, jpeg) 파일을 선택해주세요.");
             return;
         }
 
@@ -185,8 +186,8 @@ const BodyBox = ({ onLogout }) => {
         <BoxContainer>
             <MainHeader onLogout={onLogout} page="main_w" />
 
-            <TitleBox title="제품 정보 요약 페이지" text="제품 정보가 포함된 PDF를 업로드하면 AI가 제품 정보 요약본을 자동으로
-                    생성해 드립니다."/>
+            <TitleBox title="제품 정보 요약 페이지"
+                text="제품 정보가 포함된 문서(PDF), 이미지(png, jpeg, jpg)를 업로드하면 AI가 제품 정보 요약본을 자동으로 생성해 드립니다." />
 
             <Main>
                 <BoxWrapper>
@@ -202,7 +203,7 @@ const BodyBox = ({ onLogout }) => {
 
                                 id="file-input"
                                 type="file"
-                                accept=".pdf"
+                                accept=".pdf, .png, .jpg, .jpeg"
                                 onChange={handleFileChange}
                                 className="file-input"
                             />
@@ -215,7 +216,7 @@ const BodyBox = ({ onLogout }) => {
                                 <div>
                                     <UploadIcon src={Cloud} />
                                     <UploadText>
-                                        PDF 파일을 업로드 하거나 여기로 드래그 하세요.
+                                        문서/이미지 파일을 업로드 하거나 여기로 드래그 하세요.
                                     </UploadText>
                                 </div>)}
                         </UploadBox>

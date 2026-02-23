@@ -279,7 +279,7 @@ app.post('/api/generate-script', upload.single('pdf'), async (req, res) => {
 
 app.post(
   "/api/generate-summary",
-  upload.single("pdf"),
+  upload.single("pdf"), // 💡 프론트엔드 formData 필드명이 "pdf"라면 그대로 유지해도 무방합니다.
   async (req, res) => {
     const respond = respondOnce(res);
 
@@ -287,11 +287,44 @@ app.post(
       if (!req.file) {
         return respond.json(400, {
           success: false,
-          error: "PDF 파일이 필요합니다."
+          error: "파일이 필요합니다. (PDF 또는 이미지)",
         });
       }
 
-      const pdfBase64 = req.file.buffer.toString("base64");
+      // [변경 포인트 1] 파일 데이터 추출 및 MIME 타입 확인
+      const fileBase64 = req.file.buffer.toString("base64");
+      const mimeType = req.file.mimetype;
+
+      // [변경 포인트 2] 파일 타입에 따라 Claude에게 보낼 블록 구조 분기
+      let mediaBlock;
+
+      if (mimeType === "application/pdf") {
+        // PDF인 경우
+        mediaBlock = {
+          type: "document",
+          source: {
+            type: "base64",
+            media_type: "application/pdf",
+            data: fileBase64,
+          },
+        };
+      } else if (mimeType.startsWith("image/")) {
+        // 이미지(PNG, JPG 등)인 경우
+        mediaBlock = {
+          type: "image",
+          source: {
+            type: "base64",
+            media_type: mimeType, // "image/png", "image/jpeg" 등이 자동으로 들어갑니다
+            data: fileBase64,
+          },
+        };
+      } else {
+        // 허용되지 않은 파일 형식일 때 차단
+        return respond.json(400, {
+          success: false,
+          error: "지원하지 않는 파일 형식입니다. (PDF, JPG, PNG 등만 가능)",
+        });
+      }
 
       const response = await callClaudeWithTimeout({
         model: "claude-sonnet-4-20250514",
@@ -299,22 +332,15 @@ app.post(
         temperature: 0.2,
         system: `
           당신은 라이브커머스 및 방송 큐시트 제작 전문가입니다.
-          첨부된 PDF가 이미지 기반이라면 스스로 텍스트를 추출한 뒤,
-          제품 정보와 강점을 방송용으로 이해하기 쉽게 요약하세요.
-          단, 반드시 임의로 내용을 추가하지 말고 PDF에 있는 내용으로만 작성하세요. 
+          첨부된 문서나 이미지를 분석하여 제품 정보와 강점을 방송용으로 이해하기 쉽게 요약하세요.
+          단, 반드시 임의로 내용을 추가하지 말고 주어진 내용으로만 작성하세요. 
           `,
         messages: [
           {
             role: "user",
             content: [
-              {
-                type: "document",
-                source: {
-                  type: "base64",
-                  media_type: "application/pdf",
-                  data: pdfBase64
-                }
-              },
+              // [변경 포인트 3] 분기 처리한 블록을 여기에 쏙 집어넣습니다.
+              mediaBlock,
               {
                 type: "text",
                 text: `
@@ -322,7 +348,6 @@ app.post(
 
                     1. 제품 개요(카탈로그 내 정보에 있는 각 제품의 요약 - 가격, 제품명, 스펙 등)
                     2. 차별화 강점 3가지 이상
-
                     `
               }
             ]
@@ -330,8 +355,7 @@ app.post(
         ]
       });
 
-      const summary =
-        response.content?.[0]?.text || "요약 결과가 없습니다.";
+      const summary = response.content?.[0]?.text || "요약 결과가 없습니다.";
 
       return respond.json(200, {
         success: true,
@@ -341,21 +365,18 @@ app.post(
     } catch (err) {
       console.error("[ERROR] /api/generate-summary:", err);
 
-      // 1. 타임아웃 에러인지 확인 (AbortController에 의해 중단된 경우)
       const isTimeout = err.name === 'AbortError' || err.message?.includes('aborted');
 
-      // 2. 응답 생성
       if (!respond.isSent()) {
         if (isTimeout) {
           return respond.json(504, {
             success: false,
             error: "요청 시간이 초과되었습니다. (서버 타임아웃)",
-            details: "PDF 분석에 시간이 너무 많이 소요됩니다. 용량을 줄여보세요."
+            details: "파일 분석에 시간이 너무 많이 소요됩니다. 용량을 줄여보세요."
           });
         }
 
-        // 3. Claude API 자체 에러 처리 (API 키 문제, 할당량 초과 등)
-        if (err.status) { // Anthropic SDK는 에러 시 status를 포함합니다
+        if (err.status) {
           return respond.json(err.status, {
             success: false,
             error: `Claude API 오류: ${err.status}`,
@@ -363,10 +384,9 @@ app.post(
           });
         }
 
-        // 4. 그 외 일반적인 서버 내부 에러
         return respond.json(500, {
           success: false,
-          error: err.message || String(err), // 여기서 에러 메시지 전체를 출력합니다.
+          error: err.message || String(err),
           details: err.stack
         });
       }

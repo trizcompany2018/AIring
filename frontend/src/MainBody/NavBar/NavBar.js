@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import menu from './menu.png'
-import schedule from './icon_Schedule.png'
+// import schedule from './icon_Schedule.png'
 import writing from './icon_Writing_on.png'
 import gemini from './Vector.png'
 import gpt from './ChatGPT-Logo 1.png'
@@ -8,7 +8,7 @@ import document from './document.png'
 import lab from './tube.png'
 import pdfimg from './pdfimg.png'
 import logo from '../../MainHeader/white_logo2.png'
-import present from './present.png'
+//import present from './present.png'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -59,8 +59,8 @@ const NavBar = () => {
   const menuItems = [
     { id: 'summary', icon: document, label: 'Summary', onClick: () => navigate('/summary') },
     { id: 'writing', icon: writing, label: 'Writing', onClick: () => navigate('/main') },
-    { id: 'schedule', icon: schedule, label: 'Schedule', onClick: null },
-    { id: 'event', icon: present, label: 'Event', onClick: () => navigate('/event') },
+    // { id: 'schedule', icon: schedule, label: 'Schedule', onClick: null },
+    // { id: 'event', icon: present, label: 'Event', onClick: () => navigate('/event') },
     { id: 'gemini', icon: gemini, label: 'Nanobanana', onClick: () => window.open("https://gemini.google.com/?hl=ko", "_blank", "noopener,noreferrer") },
     { id: 'gpt', icon: gpt, label: 'ChatGPT', onClick: () => window.open("https://chatgpt.com/", "_blank", "noopener,noreferrer") },
     { id: 'imagefx', icon: lab, label: 'ImageFX', onClick: () => window.open("https://labs.google/fx/ko/tools/image-fx", "_blank", "noopener,noreferrer") },
@@ -79,9 +79,9 @@ const NavBar = () => {
       </MenuContainer>
 
       {menuItems.map((item) => (
-        <MenuContainer 
-          key={item.id} 
-          isOpen={clickState} 
+        <MenuContainer
+          key={item.id}
+          isOpen={clickState}
           onClick={item.onClick}
         >
           <MenuIcon src={item.icon} />

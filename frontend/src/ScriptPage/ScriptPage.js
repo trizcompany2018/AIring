@@ -1,5 +1,5 @@
 import MainHeader from "../MainHeader/MainHeader";
-import styled from "styled-components";
+import * as S from './ScriptPage.styles.js'
 import { useLocation, useNavigate } from "react-router-dom";
 import "../App.css";
 import Footer from '../Footer/Footer.js'
@@ -8,133 +8,8 @@ import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
 import { useRef } from "react";
 
-const Container = styled.div`
-  min-height: 100vh;
-  width: 100vw;
-  background-color: #f4f1eb;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
 
-`;
-
-const Page = styled.div`
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-`;
-
-const Main = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding-top: 48px;
-`;
-
-const BoxContainer = styled.div`
-  width: 100vw;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const BoxHeader = styled.div`
-  width: 80vw;
-`;
-
-
-const Box = styled.div`
-  width: 80vw;
-  background: #fff;
-  border-radius: 20px;
-  padding: 40px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
-  border: 2px solid #05da88;
-  display: flex;
-  flex-direction: column;
-  align-items: center;s
-  min-height: 10rem;
-`;
-
-const PageTitle = styled.p`
-  font-size: 40px;
-  font-weight: 700;
-  margin-bottom: 8px;
-`;
-
-const PageSubTitle = styled.p`
-  font-size: 14px;
-  font-weight: 400;
-  color: #4b5563;
-`;
-
-const FormActions = styled.div`
-  display: flex;
-  gap: 20px;
-  padding-bottom: 40px;
-  padding-top: 40px;
-  align-items: center;
-  justify-content: center;
-  width: 80vw;
-`;
-
-const BtnPrimary = styled.button`
-  width: 300px;
-  height: 48px;
-  border-radius: 10px;
-  border: none;
-  font-size: 15px;
-  cursor: pointer;
-  background: #00e673;
-  color: #fff;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const BtnSecondary = styled.button`
-  border-radius: 10px;
-  border: none;
-  font-size: 15px;
-  cursor: pointer;
-  width: 300px;
-  height: 48px;
-  background: #bbbbbb;
-  color: #fff;
-  font-weight: 400;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const ScriptContainer = styled.div`
-
-font-size: 1rem;
-
-`
-const ScriptHeader = styled.div`
-
-font-size: 20px;
-font-weight: 800;
-margin-bottom: 10px;
-
-`
-const TextBox = styled.pre`
-
-margin: 10px;
-width: 70vw;
-font-family: "Pretendard";
-font-size: 14px;
-  white-space: pre-wrap;      /* 줄바꿈 유지 + 자동 줄바꿈 */
-  word-break: break-word;     /* 긴 단어도 강제 줄바꿈 */
-  overflow-wrap: break-word;  /* 브라우저 호환 */
-
-
-`
-const ScriptPage = ({onLogout}) => {
+const ScriptPage = ({ onLogout }) => {
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -175,15 +50,15 @@ const ScriptPage = ({onLogout}) => {
             });
 
             const imgData = canvas.toDataURL('image/png');
-            
+
             // 2. PDF 생성 (A4 사이즈 기준)
             const pdf = new jsPDF('p', 'mm', 'a4');
 
             const margin = 20;
-            const imgWidth = 210 - (margin*2); // A4 가로 mm
+            const imgWidth = 210 - (margin * 2); // A4 가로 mm
             const pageHeight = 297; // A4 세로 mm
             const imgHeight = (canvas.height * imgWidth) / canvas.width;
-            
+
             let heightLeft = imgHeight;
             let position = margin;
 
@@ -215,37 +90,33 @@ const ScriptPage = ({onLogout}) => {
     };
 
     return (
-        <Container>
-            <MainHeader onLogout={onLogout} page="main_g"/>
-            <Page>
-                <BoxContainer>
-                    <BoxHeader>
-                        <PageTitle>라이브 방송 대본 생성</PageTitle>
-                        <PageSubTitle>생성된 대본을 확인하고 복사할 수 있습니다.</PageSubTitle>
-                    </BoxHeader>
-                </BoxContainer>
+        <S.Container>
+            <MainHeader onLogout={onLogout} page="main_g" />
+            <S.Page>
+                <S.BoxContainer>
+                    <S.BoxHeader>
+                        <S.PageTitle>라이브 방송 대본 생성</S.PageTitle>
+                        <S.PageSubTitle>생성된 대본을 확인하고 복사할 수 있습니다.</S.PageSubTitle>
+                    </S.BoxHeader>
+                </S.BoxContainer>
 
-                <Main>
+                <S.Main>
+                    <S.Box>
+                        <S.ScriptContainer ref={scriptRef} style={{ backgroundColor: '#fff', padding: '20px' }}>
+                            <S.ScriptHeader>📝 생성된 방송 대본</S.ScriptHeader>
+                            <S.TextBox><ReactMarkdown>{script}</ReactMarkdown></S.TextBox>
+                        </S.ScriptContainer>
 
-                    <Box>
-                        <ScriptContainer ref={scriptRef} style={{ backgroundColor: '#fff', padding: '20px' }}>
-                            <ScriptHeader>📝 생성된 방송 대본</ScriptHeader>
-                            <TextBox><ReactMarkdown>{script}</ReactMarkdown></TextBox>
-                        </ScriptContainer>
-
-                    </Box>
-
-
-                    <FormActions>
-                        <BtnPrimary onClick={handleDownloadPDF}>PDF 다운</BtnPrimary>
-                        <BtnPrimary onClick={handleCopy}>복사하기</BtnPrimary>
-                        <BtnSecondary onClick={handleBack}>이전</BtnSecondary>
-                    </FormActions>
-                </Main>
-
+                    </S.Box>
+                    <S.FormActions>
+                        <S.BtnPrimary onClick={handleDownloadPDF}>PDF 다운</S.BtnPrimary>
+                        <S.BtnPrimary onClick={handleCopy}>복사하기</S.BtnPrimary>
+                        <S.BtnSecondary onClick={handleBack}>이전</S.BtnSecondary>
+                    </S.FormActions>
+                </S.Main>
                 <Footer />
-            </Page>
-        </Container>
+            </S.Page>
+        </S.Container>
     );
 };
 
