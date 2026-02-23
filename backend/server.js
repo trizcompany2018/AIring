@@ -1,7 +1,7 @@
 // server.js
 // Node >= 18 권장 (fetch/AbortController 내장)
 import { BROADCAST_GUIDELINES } from './ITConstants.js';
-
+import sharp from 'sharp';
 import express from 'express';
 import cors from 'cors';
 import multer from 'multer';
@@ -14,7 +14,6 @@ const app = express();
 const PORT = process.env.PORT ? Number(process.env.PORT) : 5000;
 const TIMEOUT_MS = process.env.CLAUDE_TIMEOUT_MS ? Number(process.env.CLAUDE_TIMEOUT_MS) : 90000;
 console.log('[ENV] CLAUDE_TIMEOUT_MS:', TIMEOUT_MS);
-const sharp = require("sharp")
 
 // ===== 공통 미들웨어 =====
 app.use(cors());
