@@ -1,6 +1,9 @@
 // server.js
 // Node >= 18 권장 (fetch/AbortController 내장)
 import { BROADCAST_GUIDELINES } from './ITConstants.js';
+import { CLOTHES_BROADCAST_GUIDELINES } from './ClothesConstants.js';
+import { FOOD_BROADCAST_GUIDELINES } from './FoodConstants.js';
+import { BEAUTY_BROADCAST_GUIDELINES } from './BeautyConstants.js'
 import sharp from 'sharp';
 import express from 'express';
 import cors from 'cors';
@@ -152,6 +155,7 @@ app.post('/api/test-script', async (req, res) => {
     }
   }
 });
+
 // ===== 실제 PDF 업로드 버전 =====
 app.post('/api/generate-script', upload.single('pdf'), async (req, res) => {
   const respond = respondOnce(res);
@@ -209,6 +213,22 @@ app.post('/api/generate-script', upload.single('pdf'), async (req, res) => {
       toneGuide = '말투는 자연스럽고 친근하지만 과하지 않게 작성해주세요.';
     }
 
+    let selectedGuidelines = BROADCAST_GUIDELINES;
+
+    if (category === 'food') {
+      selectedGuidelines = FOOD_BROADCAST_GUIDELINES;
+    }
+    else if (category === 'beauty') {
+      selectedGuidelines = BEAUTY_BROADCAST_GUIDELINES;
+    }
+    else if (category === 'fashion') {
+      selectedGuidelines = CLOTHES_BROADCAST_GUIDELINES;
+    }
+    else {
+      selectedGuidelines = BROADCAST_GUIDELINES;
+    }
+
+
     const t0 = Date.now();
     const response = await anthropic.messages.create(
       {
@@ -221,7 +241,7 @@ app.post('/api/generate-script', upload.single('pdf'), async (req, res) => {
           `금일 방송의 세션 개수는 ${session}. 세션 수에 맞게 방송을 구분해줘\n\n` +
           `금일 방송의 퀴즈 진행 횟수는 ${quiz}. 퀴즈 진행 횟수에 맞게 적절한 위치인 섹션 사이나 시작 전에 넣어줘\n\n` +
           `금일 방송 진행자는 ${MC1}, ${MC2} 두명이다\n\n` +
-          `다음 가이드라인을 반드시 준수하여 큐시트를 작성해주세요:\n${BROADCAST_GUIDELINES}\n\n` +
+          `다음 가이드라인을 반드시 준수하여 큐시트를 작성해주세요:\n${selectedGuidelines}\n\n` +
           `위 가이드라인을 엄격히 따라 실제 방송에서 사용 가능한 전문적인 큐시트를 작성해주세요.\n` +
           `반드시 가이드라인의 모든 요소를 포함하여 작성하세요.\n` +
           `상품의 혜택이나 가격 요소는 (혜택소개), (가격소개) 등으로 표시만 하고 구체 금액은 생략하세요.\n` +
@@ -240,7 +260,7 @@ app.post('/api/generate-script', upload.single('pdf'), async (req, res) => {
               `- 방송명: ${programtitle}\n` +
               `- 방송 시간: ${liveTime}\n` +
               `- 시간대: ${liveClock}\n` +
-              `- 형식: 네이버 라이브 쇼핑\n` +
+              `- 형식: 라이브 쇼핑 방송\n` +
               (highlight
                 ? `- 방송에서 특히 강조해야 할 포인트: ${highlight}\n`
                 : ``) +
@@ -249,7 +269,7 @@ app.post('/api/generate-script', upload.single('pdf'), async (req, res) => {
               `2. 쇼호스트${MC1}와 ${MC2} 2인 진행\n` +
               `3. "○○ 고민, △△로 해결!" 형식의 코너명\n` +
               `4. 구체적인 시연 준비물과 분량\n` +
-              `5. 중간 퀴즈 이벤트 (4지선다)\n` +
+              `5. 중간 퀴즈 이벤트 ${quiz} 회 (4지선다)\n` +
               `6. 제품 비교 섹션\n` +
               `가이드라인에 맞춰 완전한 큐시트를 작성해주세요.`,
           },
