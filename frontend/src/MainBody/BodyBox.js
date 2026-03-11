@@ -168,6 +168,7 @@ const BodyBox = ({ onLogout }) => {
     const [liveTime, setLiveTime] = useState('');
     const [session, setSession] = useState('');
     const [liveClock, setLiveClock] = useState('');
+    const [quiz, setQuiz] = useState('')
 
     const fileInputRef = useRef(null);
     const navigate = useNavigate();
@@ -210,6 +211,7 @@ const BodyBox = ({ onLogout }) => {
         formData.append("liveTime", liveTime);
         formData.append("liveClock", liveClock);
         formData.append("sesssion", session);
+        formData.append("quiz", quiz)
 
         try {
             const response = await axios.post(
@@ -343,7 +345,7 @@ const BodyBox = ({ onLogout }) => {
                                     />
                                 </FormGroup>
                             </FormRow>
-                            <FormRow>
+                            <FormRow col={4}>
                                 <FormGroup>
                                     <FormLabel>방송 시간</FormLabel>
                                     <FormControl
@@ -357,13 +359,14 @@ const BodyBox = ({ onLogout }) => {
 
                                 <FormGroup>
                                     <FormLabel>세션 수</FormLabel>
-                                    <FormControl
-                                        id="session"
-                                        type="text"
-                                        placeholder="예시 : 3"
+                                    <SelectControl
                                         value={session}
-                                        onChange={(e) => setSession(e.target.value)}
-                                    />
+                                        onChange={(e) => setSession(e.target.value)}>
+                                        <option value="1">1개</option>
+                                        <option value="2">2개</option>
+                                        <option value="3">3개</option>
+                                        <option value="4">4개</option>
+                                    </SelectControl>
                                 </FormGroup>
                                 <FormGroup>
                                     <FormLabel>방송 시간대</FormLabel>
@@ -374,6 +377,18 @@ const BodyBox = ({ onLogout }) => {
                                         value={liveClock}
                                         onChange={(e) => setLiveClock(e.target.value)}
                                     />
+                                </FormGroup>
+                                <FormGroup>
+                                    <FormLabel>퀴즈 횟수</FormLabel>
+                                    <SelectControl
+                                        value={quiz}
+                                        onChange={(e) => setQuiz(e.target.value)}>
+                                        <option value="0">0회</option>
+                                        <option value="1">1회</option>
+                                        <option value="2">2회</option>
+                                        <option value="3">3회</option>
+                                        <option value="4">4회</option>
+                                    </SelectControl>
                                 </FormGroup>
                             </FormRow>
                             <FormGroup>

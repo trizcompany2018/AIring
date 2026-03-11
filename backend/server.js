@@ -37,7 +37,7 @@ const upload = multer({
 });
 
 // ===== Anthropic 초기화 =====
-const MODEL_ID = process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-20250514';
+const MODEL_ID = process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-6';
 const anthropic = new Anthropic({
   apiKey: process.env.CLAUDE_API_KEY,
 });
@@ -193,6 +193,7 @@ app.post('/api/generate-script', upload.single('pdf'), async (req, res) => {
       liveTime,
       session,
       liveClock,
+      quiz,
     } = req.body;
 
     // ✅ 모델 선택 (프론트가 보낸 게 있으면 그거, 없으면 기존 상수)
@@ -217,6 +218,8 @@ app.post('/api/generate-script', upload.single('pdf'), async (req, res) => {
         system:
           `당신은 라이브 쇼핑 방송 대본 작성 전문가입니다.\n\n` +
           `금일 방송의 방송 카테고리는 ${category}. 해당 카테고리의 특성에 맞게 만들어줘\n\n` +
+          `금일 방송의 세션 개수는 ${session}. 세션 수에 맞게 방송을 구분해줘\n\n` +
+          `금일 방송의 퀴즈 진행 횟수는 ${quiz}. 퀴즈 진행 횟수에 맞게 적절한 위치인 섹션 사이나 시작 전에 넣어줘\n\n` +
           `금일 방송 진행자는 ${MC1}, ${MC2} 두명이다\n\n` +
           `다음 가이드라인을 반드시 준수하여 큐시트를 작성해주세요:\n${BROADCAST_GUIDELINES}\n\n` +
           `위 가이드라인을 엄격히 따라 실제 방송에서 사용 가능한 전문적인 큐시트를 작성해주세요.\n` +
@@ -231,7 +234,7 @@ app.post('/api/generate-script', upload.single('pdf'), async (req, res) => {
           {
             role: 'user',
             content:
-              `다음 제품 정보를 바탕으로 60분 라이브 방송 큐시트를 작성해주세요. 부수적인 방송 요소는 제외하고 '큐시트만' 작성해주시면 됩니다 \n\n` +
+              `다음 제품 정보를 바탕으로 ${liveTime} 라이브 방송 큐시트를 작성해주세요. 부수적인 방송 요소는 제외하고 '큐시트만' 작성해주시면 됩니다 \n\n` +
               `[제품 정보]\n${productInfo}\n\n` +
               `요구사항:\n` +
               `- 방송명: ${programtitle}\n` +
@@ -350,7 +353,7 @@ app.post(
           {
             role: "user",
             content: [
-              // [변경 포인트 3] 분기 처리한 블록을 여기에 쏙 집어넣습니다.
+
               mediaBlock,
               {
                 type: "text",
