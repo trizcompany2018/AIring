@@ -12,7 +12,7 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT ? Number(process.env.PORT) : 5000;
-const TIMEOUT_MS = process.env.CLAUDE_TIMEOUT_MS ? Number(process.env.CLAUDE_TIMEOUT_MS) : 90000;
+const TIMEOUT_MS = process.env.CLAUDE_TIMEOUT_MS ? Number(process.env.CLAUDE_TIMEOUT_MS) : 180000;
 console.log('[ENV] CLAUDE_TIMEOUT_MS:', TIMEOUT_MS);
 
 // ===== 공통 미들웨어 =====
