@@ -50,7 +50,7 @@ const Form = styled.form`
 
 const FormRow = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(${props => props.col || 3}, 1fr);
   gap: 20px;
 `;
 
@@ -58,7 +58,6 @@ const FormGroup = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 30px;
-
 `;
 
 const FormLabel = styled.label`
@@ -164,6 +163,11 @@ const BodyBox = ({ onLogout }) => {
     const [programtitle, setProgramTitle] = useState('');
     const [tone, setTone] = useState('기본');
     const [model, setModel] = useState('claude-sonnet-4');
+    const [MC1, setMC1] = useState('');
+    const [MC2, setMC2] = useState('');
+    const [liveTime, setLiveTime] = useState('');
+    const [session, setSession] = useState('');
+    const [liveClock, setLiveClock] = useState('');
 
     const fileInputRef = useRef(null);
     const navigate = useNavigate();
@@ -201,6 +205,11 @@ const BodyBox = ({ onLogout }) => {
         formData.append("model", model);                    // 🔥 모델 선택
         formData.append("category", category);
         formData.append("programtitle", programtitle);
+        formData.append("MC1", MC1);
+        formData.append("MC2", MC2);
+        formData.append("liveTime", liveTime);
+        formData.append("liveClock", liveClock);
+        formData.append("sesssion", session);
 
         try {
             const response = await axios.post(
@@ -275,19 +284,54 @@ const BodyBox = ({ onLogout }) => {
                 <BoxWrapper>
                     <Box>
                         <Form>
-                            <FormRow>
+                            <FormRow col={2}>
                                 <FormGroup>
                                     <FormLabel>방송 카테고리</FormLabel>
                                     <SelectControl
                                         value={category}
                                         onChange={(e) => setCategory(e.target.value)}
                                     >
-                                        <option value="전자제품">전자 제품</option>
+                                        <option value="전자제품">전자</option>
                                         <option value="푸드">푸드</option>
                                         <option value="패션">패션</option>
+                                        <option value="패션">뷰티</option>
+                                    </SelectControl>
+                                </FormGroup>
+                                <FormGroup >
+                                    <FormLabel>방송톤</FormLabel>
+                                    <SelectControl
+                                        value={tone}
+                                        onChange={(e) => setTone(e.target.value)}
+                                    >
+                                        <option value="기본">기본</option>
+                                        <option value="간결">간결</option>
+                                        <option value="격식">격식</option>
                                     </SelectControl>
                                 </FormGroup>
 
+                            </FormRow>
+                            <FormRow>
+                                <FormGroup>
+                                    <FormLabel>진행자 1</FormLabel>
+                                    <FormControl
+                                        id="MC1"
+                                        type="text"
+                                        placeholder="예시 : 잇섭"
+                                        value={MC1}
+                                        onChange={(e) => setMC1(e.target.value)}
+                                    />
+                                </FormGroup>
+
+                                <FormGroup>
+                                    <FormLabel>진행자 2</FormLabel>
+                                    <FormControl
+                                        id="MC2"
+                                        type="text"
+                                        placeholder="예시 : 백종원"
+                                        value={MC2}
+                                        onChange={(e) => setMC2(e.target.value)}
+                                    />
+                                </FormGroup>
                                 <FormGroup>
                                     <FormLabel>프로그램명</FormLabel>
                                     <FormControl
@@ -296,6 +340,39 @@ const BodyBox = ({ onLogout }) => {
                                         placeholder="예시 : 핫IT슈, 백주부의 라방"
                                         value={programtitle}
                                         onChange={(e) => setProgramTitle(e.target.value)}
+                                    />
+                                </FormGroup>
+                            </FormRow>
+                            <FormRow>
+                                <FormGroup>
+                                    <FormLabel>방송 시간</FormLabel>
+                                    <FormControl
+                                        id="liveTime"
+                                        type="text"
+                                        placeholder="예시 : 60분"
+                                        value={liveTime}
+                                        onChange={(e) => setLiveTime(e.target.value)}
+                                    />
+                                </FormGroup>
+
+                                <FormGroup>
+                                    <FormLabel>세션 수</FormLabel>
+                                    <FormControl
+                                        id="session"
+                                        type="text"
+                                        placeholder="예시 : 3"
+                                        value={session}
+                                        onChange={(e) => setSession(e.target.value)}
+                                    />
+                                </FormGroup>
+                                <FormGroup>
+                                    <FormLabel>방송 시간대</FormLabel>
+                                    <FormControl
+                                        id="liveClock"
+                                        type="text"
+                                        placeholder="예시 : 12시 30분"
+                                        value={liveClock}
+                                        onChange={(e) => setLiveClock(e.target.value)}
                                     />
                                 </FormGroup>
                             </FormRow>
@@ -322,19 +399,7 @@ const BodyBox = ({ onLogout }) => {
                             </FormGroup>
                         </Form>
 
-                        <FormRow>
-                            <FormGroup>
-                                <FormLabel>방송톤</FormLabel>
-                                <SelectControl
-                                    value={tone}
-                                    onChange={(e) => setTone(e.target.value)}
-                                >
-                                    <option value="기본">기본</option>
-                                    <option value="간결">간결</option>
-                                    <option value="격식">격식</option>
-                                </SelectControl>
-                            </FormGroup>
-
+                        <FormRow col={2}>
                             <FormGroup>
                                 <FormLabel>사용모델</FormLabel>
                                 <SelectControl
@@ -392,7 +457,7 @@ const BodyBox = ({ onLogout }) => {
                 </BoxWrapper>
             </Main>
             <Footer colour="#09CE74" />
-        </BoxContainer>
+        </BoxContainer >
 
 
 
