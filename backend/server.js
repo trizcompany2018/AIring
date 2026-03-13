@@ -428,6 +428,103 @@ app.post(
   }
 );
 
+// =========================================================
+// 3️⃣ 기능: 보도자료 초안 생성 (🔥 고도화된 프롬프트 적용)
+// =========================================================
+app.post("/api/generate-press-release", upload.single("pdf"), async (req, res) => {
+  const respond = respondOnce(res);
+  try {
+    const { tone = '기본', info = '' } = req.body;
+
+    if (!req.file) {
+      return respond.json(400, { success: false, error: "파일이 필요합니다." });
+    }
+
+    const mimeType = req.file.mimetype;
+    let mediaBlock;
+
+    if (mimeType === "application/pdf") {
+      mediaBlock = { type: "document", source: { type: "base64", media_type: "application/pdf", data: req.file.buffer.toString("base64") } };
+    } else if (mimeType.startsWith("image/")) {
+      const resizedImageBuffer = await sharp(req.file.buffer)
+        .resize({ width: 4000, height: 4000, fit: 'inside', withoutEnlargement: true })
+        .toBuffer();
+      mediaBlock = { type: "image", source: { type: "base64", media_type: mimeType, data: resizedImageBuffer.toString("base64") } };
+    } else {
+      return respond.json(400, { success: false, error: "지원하지 않는 파일 형식입니다." });
+    }
+
+    // 사용자가 선택한 톤에 따른 미세 조정
+    let toneGuide = "객관적이고 신뢰감 있는 공식적인 스트레이트 기사체(다/까)를 사용하세요.";
+    if (tone === "간결") toneGuide = "수식어를 철저히 배제하고, 육하원칙(5W1H)에 입각하여 사실과 핵심 정보 위주로 매우 간결한 단문 위주로 작성하세요.";
+    if (tone === "격식") toneGuide = "매우 정중하고 권위 있는 문체를 사용하며, 기업의 공식 입장문처럼 무게감 있게 작성하세요.";
+
+    // 💡 Claude 프롬프트 고도화 (제공된 PDF 샘플 분석 반영)
+    const response = await callClaudeWithTimeout({
+      model: MODEL_ID, // 앞서 설정한 모델 변수
+      max_tokens: 3000,
+      temperature: 0.6, // 인용구 창작과 부드러운 문장 연결을 위해 0.6으로 설정
+      system: `당신은 10년 차 전문 PR 홍보 담당자이자 언론 보도자료 작성 전문가입니다. 제공된 어수선한 실무 자료나 메일 내용을 바탕으로, 기자들이 바로 복사해서 기사화할 수 있을 만큼 완벽한 형태의 보도자료 초안을 작성하는 것이 당신의 임무입니다.`,
+      messages: [
+        {
+          role: "user",
+          content: [
+            mediaBlock,
+            {
+              type: "text",
+              text: `
+                첨부된 문서/이미지 자료를 바탕으로 언론사에 배포할 '공식 보도자료 초안'을 작성해주세요.
+
+                [핵심 작성 가이드라인]
+                1. 어조 및 톤앤매너: ${toneGuide}
+                2. 문장 구조: 짧고 간결한 문장(단문) 위주로 작성하며, 주술 호응이 명확해야 합니다. 수동태 표현은 피하고 능동태를 사용하세요.
+
+                [보도자료 필수 구조]
+                작성 시 반드시 아래의 구조를 순서대로 따르세요.
+
+                1. [헤드라인 (제목)]
+                   - 기사의 핵심 내용을 한눈에 파악할 수 있도록 작성하세요.
+                   - 예시: "OO기업, 신규 서비스 XX 출시... 글로벌 시장 진출 본격화"
+                   
+                2. [부제목 (리드문)]
+                   - 헤드라인 아래에 위치하며, 본문 전체 내용을 1~2문장으로 요약한 핵심 단락입니다.
+                   - 육하원칙을 바탕으로 가장 중요한 팩트(Fact)를 앞세우세요.
+                   
+                3. [본문 (전개)]
+                   - 문단을 적절히 나누고, 필요하다면 내용 전환 시 '◇ 소제목' 기호를 사용하여 문단을 구분하세요. (예: ◇ "OOO 전략으로 승부수")
+                   - 사업 내용, 제품의 특장점, 시장 동향, 향후 계획 등을 논리적으로 전개하세요.
+                   - 구체적인 수치나 데이터가 있다면 적극적으로 활용하여 신뢰도를 높이세요.
+                   
+                4. [인용구 (관계자 코멘트)]
+                   - 기사 마지막 부분(또는 자연스러운 문맥)에 기업 대표나 관계자의 공식 코멘트를 큰따옴표(" ")를 사용하여 반드시 삽입하세요.
+                   - 코멘트는 사업의 의의, 기대 효과, 향후 비전 등을 담아 자연스럽게 창작해주세요.
+                   - 예시: OO기업 대표는 "이번 투자를 통해 글로벌 잠재력을 가진 다양한 로컬브랜드를 발굴 및 지원하고 글로벌 시장을 연결하는 파트너로 자리매김하겠다"고 밝혔다.
+                   
+                5. [마무리 기호]
+                   - 기사의 끝에는 반드시 '(끝)'을 기입하세요.
+
+                [사용자 추가 요청사항]
+                ${info ? info : "제공된 기초 자료의 내용을 최대한 객관적인 기사체로 변환하는 데 집중하세요."}
+              `
+            }
+          ]
+        }
+      ]
+    });
+
+    return respond.json(200, {
+      success: true,
+      summary: response.content?.[0]?.text || "보도자료 생성 결과가 없습니다."
+    });
+
+  } catch (err) {
+    console.error("[ERROR] /api/generate-press-release:", err);
+    if (!respond.isSent()) {
+      return respond.json(500, { success: false, error: err.message });
+    }
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`=================================`);
   console.log(`🚀 서버가 포트 ${PORT}에서 정상 실행 중입니다.`);

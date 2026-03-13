@@ -412,19 +412,20 @@ const BodyBox = ({ onLogout }) => {
                                     onChange={(e) => setAvoidLanguage(e.target.value)}
                                 />
                             </FormGroup>
+                            <FormRow col={2}>
+                                <FormGroup>
+                                    <FormLabel>사용모델</FormLabel>
+                                    <SelectControl
+                                        value={model}
+                                        onChange={(e) => setModel(e.target.value)}>
+                                        <option value="claude-sonnet-4">claude-sonnet-4</option>
+                                        {/* 나중에 모델 추가하면 option만 늘리면 됨 */}
+                                    </SelectControl>
+                                </FormGroup>
+                            </FormRow>
                         </Form>
 
-                        <FormRow col={2}>
-                            <FormGroup>
-                                <FormLabel>사용모델</FormLabel>
-                                <SelectControl
-                                    value={model}
-                                    onChange={(e) => setModel(e.target.value)}>
-                                    <option value="claude-sonnet-4">claude-sonnet-4</option>
-                                    {/* 나중에 모델 추가하면 option만 늘리면 됨 */}
-                                </SelectControl>
-                            </FormGroup>
-                        </FormRow>
+
                         {/* PDF 업로드 영역 */}
 
                         <UploadBox onClick={handleUploadBoxClick}>

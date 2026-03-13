@@ -5,6 +5,7 @@ import Event from './Event/Body.js'
 import Login from './LogIn/Login.js';
 import MainBody from './MainBody/MainBody.js';
 import ScriptPage from './ScriptPage/ScriptPage.js';
+import News from './News/News.js';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태 관리
@@ -41,6 +42,13 @@ function App() {
           path="/event"
           element={
             isLoggedIn ? <Event onLogout={() => setIsLoggedIn(false)} /> : <Navigate to="/" replace />
+          }
+        />
+        {/* 방송 이벤트 생성 페이지*/}
+        <Route
+          path="/news"
+          element={
+            isLoggedIn ? <News onLogout={() => setIsLoggedIn(false)} /> : <Navigate to="/" replace />
           }
         />
       </Routes>
