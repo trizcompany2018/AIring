@@ -168,7 +168,9 @@ const BodyBox = ({ onLogout }) => {
     const [liveTime, setLiveTime] = useState('');
     const [session, setSession] = useState('');
     const [liveClock, setLiveClock] = useState('');
-    const [quiz, setQuiz] = useState('')
+    const [quiz, setQuiz] = useState('');
+    const [theme, setTheme] = useState('');
+    const [formation, setFormation] = useState('');
 
     const fileInputRef = useRef(null);
     const navigate = useNavigate();
@@ -211,7 +213,9 @@ const BodyBox = ({ onLogout }) => {
         formData.append("liveTime", liveTime);
         formData.append("liveClock", liveClock);
         formData.append("sesssion", session);
-        formData.append("quiz", quiz)
+        formData.append("quiz", quiz);
+        formData.append("theme", theme);
+        formData.append("formation", formation);
 
         try {
             const response = await axios.post(
@@ -238,35 +242,6 @@ const BodyBox = ({ onLogout }) => {
         }
     };
 
-    // 테스트용 임시 api 요청
-
-    // const generateTest = async () => {
-    //     setLoading(true);
-    //     setError("");
-
-    //     try {
-    //         const response = await axios.post(
-    //             "https://airing-eabn.onrender.com/api/test-script",
-    //             { question: "리버풀 FC의 빌 샹클리 이후 역대 감독을 제임 기간과 이룩한 업적과 함께 알려줘" }
-    //         );
-
-    //         if (response.data.success) {
-    //             const scriptText = response.data.script || "";
-
-    //             navigate("/result", { state: { script: scriptText } });
-    //         } else {
-    //             setError("대본 생성에 실패했습니다.");
-    //         }
-    //     } catch (err) {
-    //         setError("서버 연결에 실패했습니다. 백엔드 서버가 실행 중인지 확인해주세요.");
-    //         console.error(err);
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
-
-
-    // 초기화
     const handleReset = () => {
         setFile(null);
         setError("");
@@ -312,9 +287,31 @@ const BodyBox = ({ onLogout }) => {
                                 </FormGroup>
 
                             </FormRow>
+                            <FormRow col={2}>
+                                <FormGroup>
+                                    <FormLabel>방송 테마</FormLabel>
+                                    <FormControl
+                                        id="theme"
+                                        type="text"
+                                        placeholder="예시 : 개강을 앞둔 대학생을 위한 노트북 라이브"
+                                        value={MC1}
+                                        onChange={(e) => setTheme(e.target.value)}
+                                    />
+                                </FormGroup>
+
+                                <FormGroup>
+                                    <FormLabel>인력 구성</FormLabel>
+                                    <SelectControl
+                                        value={formation}
+                                        onChange={(e) => setFormation(e.target.value)}>
+                                        <option value="si">쇼호스트 & 쇼호스트</option>
+                                        <option value="ss">쇼호스트 & 인플루언서</option>
+                                    </SelectControl>
+                                </FormGroup>
+                            </FormRow>
                             <FormRow>
                                 <FormGroup>
-                                    <FormLabel>진행자 1</FormLabel>
+                                    <FormLabel>메인 진행자</FormLabel>
                                     <FormControl
                                         id="MC1"
                                         type="text"
@@ -325,7 +322,7 @@ const BodyBox = ({ onLogout }) => {
                                 </FormGroup>
 
                                 <FormGroup>
-                                    <FormLabel>진행자 2</FormLabel>
+                                    <FormLabel>서브 진행자</FormLabel>
                                     <FormControl
                                         id="MC2"
                                         type="text"
@@ -418,7 +415,7 @@ const BodyBox = ({ onLogout }) => {
                                     <SelectControl
                                         value={model}
                                         onChange={(e) => setModel(e.target.value)}>
-                                        <option value="claude-sonnet-4">claude-sonnet-4</option>
+                                        <option value="claude-sonnet-4">claude-sonnet-4.6</option>
                                         {/* 나중에 모델 추가하면 option만 늘리면 됨 */}
                                     </SelectControl>
                                 </FormGroup>

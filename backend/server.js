@@ -198,6 +198,8 @@ app.post('/api/generate-script', upload.single('pdf'), async (req, res) => {
       session,
       liveClock,
       quiz,
+      theme,
+      formation,
     } = req.body;
 
     // ✅ 모델 선택 (프론트가 보낸 게 있으면 그거, 없으면 기존 상수)
@@ -214,6 +216,15 @@ app.post('/api/generate-script', upload.single('pdf'), async (req, res) => {
     }
 
     let selectedGuidelines = BROADCAST_GUIDELINES;
+
+    let broad_formation = '';
+
+    if (formation === 'si') {
+      broad_formation = "쇼호스트 & 인플루언서"
+    }
+    else {
+      broad_formation = "쇼호스트 & 쇼호스트"
+    }
 
     if (category === 'food') {
       selectedGuidelines = FOOD_BROADCAST_GUIDELINES;
@@ -238,9 +249,11 @@ app.post('/api/generate-script', upload.single('pdf'), async (req, res) => {
         system:
           `당신은 라이브 쇼핑 방송 대본 작성 전문가입니다.\n\n` +
           `금일 방송의 방송 카테고리는 ${category}. 해당 카테고리의 특성에 맞게 만들어줘\n\n` +
+          `방송의 메인 테마는 ${theme}. 이 테마에 맞는 콘셉트로 대본을 작성해줘\n\n` +
           `금일 방송의 세션 개수는 ${session}. 세션 수에 맞게 방송을 구분해줘\n\n` +
           `금일 방송의 퀴즈 진행 횟수는 ${quiz}. 퀴즈 진행 횟수에 맞게 적절한 위치인 섹션 사이나 시작 전에 넣어줘\n\n` +
           `금일 방송 진행자는 ${MC1}, ${MC2} 두명이다\n\n` +
+          `방송 인원 구성은 ${broad_formation}이니까 두 명 조합을 이에 맞게 진행하라\n\n` +
           `다음 가이드라인을 반드시 준수하여 큐시트를 작성해주세요:\n${selectedGuidelines}\n\n` +
           `위 가이드라인을 엄격히 따라 실제 방송에서 사용 가능한 전문적인 큐시트를 작성해주세요.\n` +
           `반드시 가이드라인의 모든 요소를 포함하여 작성하세요.\n` +
@@ -265,7 +278,7 @@ app.post('/api/generate-script', upload.single('pdf'), async (req, res) => {
                 ? `- 방송에서 특히 강조해야 할 포인트: ${highlight}\n`
                 : ``) +
               `\n반드시 포함해야 할 요소:\n` +
-              `1. 30초 카운트다운으로 시작\n` +
+              `1. 카운트다운으로 시작\n` +
               `2. 쇼호스트${MC1}와 ${MC2} 2인 진행\n` +
               `3. "○○ 고민, △△로 해결!" 형식의 코너명\n` +
               `4. 구체적인 시연 준비물과 분량\n` +
