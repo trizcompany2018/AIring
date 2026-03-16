@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import menu from './menu.png'
-import schedule from './icon_Schedule.png'
+// import schedule from './icon_Schedule.png'
+import news from './news.png'
 import writing from './icon_Writing_on.png'
 import gemini from './Vector.png'
 import gpt from './ChatGPT-Logo 1.png'
@@ -65,7 +66,7 @@ const NavBar = () => {
     { id: 'gpt', icon: gpt, label: 'ChatGPT', onClick: () => window.open("https://chatgpt.com/", "_blank", "noopener,noreferrer") },
     { id: 'imagefx', icon: lab, label: 'ImageFX', onClick: () => window.open("https://labs.google/fx/ko/tools/image-fx", "_blank", "noopener,noreferrer") },
     { id: 'notebook', icon: pdfimg, label: 'NotebookLM', onClick: () => window.open("https://notebooklm.google/?hl=ko", "_blank", "noopener,noreferrer") },
-    { id: 'news', icon: schedule, label: 'News', onClick: () => navigate('/news') },
+    { id: 'news', icon: news, label: 'News', onClick: () => navigate('/news') },
   ];
 
   return (
