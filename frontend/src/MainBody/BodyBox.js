@@ -151,10 +151,9 @@ display: none;
 
 `
 
-
 const BodyBox = ({ onLogout }) => {
 
-    const [file, setFile] = useState(null);
+    const [file, setFile] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [highlight, setHighlight] = useState('');
@@ -180,13 +179,18 @@ const BodyBox = ({ onLogout }) => {
 
     // 파일 선택 처리
     const handleFileChange = (e) => {
-        const selectedFile = e.target.files[0];
-        if (selectedFile && selectedFile.type === "application/pdf") {
-            setFile(selectedFile);
+        // e.target.files는 여러 파일의 목록(FileList)
+        const selectedFiles = Array.from(e.target.files);
+
+        // PDF 파일만 필터링 
+        const validFiles = selectedFiles.filter(file => file.type === "application/pdf");
+
+        if (validFiles.length > 0) {
+            setFile(validFiles); // 💡 배열 형태로 저장
             setError("");
         } else {
             setError("PDF 파일만 업로드 가능합니다.");
-            setFile(null);
+            setFile([]);
         }
     };
 
@@ -201,7 +205,10 @@ const BodyBox = ({ onLogout }) => {
         setError("");
 
         const formData = new FormData();
-        formData.append("pdf", file); // 기존 PDF
+        // files 배열을 돌면서 같은 "pdf"라는 이름으로 계속 추가함
+        file.forEach((file) => {
+            formData.append("pdf", file);
+        });
         formData.append("highlight", highlight);            // 🔥 강조포인트
         formData.append("avoidLanguage", avoidLanguage);    // 🔥 지양 언어
         formData.append("tone", tone);                      // 🔥 방송톤
@@ -426,28 +433,33 @@ const BodyBox = ({ onLogout }) => {
                         {/* PDF 업로드 영역 */}
 
                         <UploadBox onClick={handleUploadBoxClick}>
-
                             <FileBox
                                 ref={fileInputRef}
-
                                 id="file-input"
                                 type="file"
                                 accept=".pdf"
+                                multiple // ⭐ 핵심! 다중 선택 허용
                                 onChange={handleFileChange}
                                 className="file-input"
                             />
-                            {file ? (
+                            {file.length > 0 ? (
                                 <div>
-                                    <p>📄 선택된 파일:</p>
-                                    <p className="file-name">{file.name}</p>
+                                    <p>📄 선택된 파일 ({file.length}개):</p>
+                                    {/* 여러 개의 파일 이름을 순회하며 보여줌 */}
+                                    {file.map((f, index) => (
+                                        <p key={index} className="file-name" style={{ fontSize: '13px', margin: '4px 0' }}>
+                                            - {f.name}
+                                        </p>
+                                    ))}
                                 </div>
                             ) : (
                                 <div>
                                     <UploadIcon src={Cloud} />
                                     <UploadText>
-                                        PDF 파일을 업로드 하거나 여기로 드래그 하세요.
+                                        여러 개의 PDF 파일을 업로드 하거나 여기로 드래그 하세요.
                                     </UploadText>
-                                </div>)}
+                                </div>
+                            )}
                         </UploadBox>
 
                         <FormActions>

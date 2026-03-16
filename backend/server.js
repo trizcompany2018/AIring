@@ -157,7 +157,7 @@ app.post('/api/test-script', async (req, res) => {
 });
 
 // ===== 실제 PDF 업로드 버전 =====
-app.post('/api/generate-script', upload.single('pdf'), async (req, res) => {
+app.post('/api/generate-script', upload.array('pdf', 10), async (req, res) => {
   const respond = respondOnce(res);
 
   const timeoutMs = TIMEOUT_MS;
