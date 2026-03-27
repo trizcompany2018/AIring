@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import * as S from './BodyBox.styles.js'
 import Overlay from "./Overlay";
 import TitleBox from "../TitleBox/Titlebox";
 import Footer from '../Footer/Footer.js'
@@ -8,148 +8,6 @@ import { useState, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const BoxWrapper = styled.div`
-  position: relative;
-`;
-
-
-const BoxContainer = styled.div`
-
-display: flex;
-flex-direction: column;
-align-tiems: center;s
-
-`
-const Main = styled.div`
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-top: 48px;
-`;
-
-const Box = styled.div`
-  width: 80vw;
-  background: #fff;
-  border-radius: 20px;
-  padding-left: 40px; 
-  padding-right: 40px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
-  border: 2px solid #05DA88;
-  display: flex;
-  flex-direction: column;
-padding-top: 40px;
-`;
-
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-
-`;
-
-const FormRow = styled.div`
-  display: grid;
-  grid-template-columns: repeat(${props => props.col || 3}, 1fr);
-  gap: 20px;
-`;
-
-const FormGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 30px;
-`;
-
-const FormLabel = styled.label`
-  font-size: 24px;
-  font-weight: 700; /* Bold (Medium 없음) */
-  color: #374151;
-    margin-bottom: 15px;
-`;
-
-const FormControl = styled.input`
-  height: 48px;
-  padding: 0 14px;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  font-size: 14px;
-  font-weight: 400;
-`;
-
-const SelectControl = styled.select`
-  height: 48px;
-  padding: 0 14px;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  font-size: 14px;
-  font-weight: 400;
-`;
-
-const UploadBox = styled.div`
-  border-radius: 16px;
-  border: 2px dashed #22c55e;
-  background: #eafff1;
-  text-align: center;
-  padding: 24px;
-`;
-const UploadIcon = styled.img`
-  width: 32px;
-  height: 32px;
-  margin-bottom: 8px;
-`;
-
-const UploadText = styled.p`
-  font-size: 14px;
-  font-weight: 400;
-  color: #047857;
-`;
-
-const FormActions = styled.div`
-  display: flex;
-  gap: 20px;
-    padding-bottom: 40px;
-    padding-top: 40px;
-  align-items: center;
-  justify-content: center;
-`;
-
-const BtnPrimary = styled.div`
-  width: 300px;
-  height: 48px;
-  border-radius: 10px;
-  border: none;
-  font-size: 15px;
-  cursor: pointer;
-  background: #00E673;
-  color: #fff;
-  font-weight: 700; /* Bold */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const BtnSecondary = styled.div`
-
-  border-radius: 10px;
-  border: none;
-  font-size: 15px;
-  cursor: pointer;
-  width: 300px;
-  height: 48px;
-
-  background: #BBBBBB;
-  color: #fff;
-  font-weight: 400;
-    display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const FileBox = styled.input`
-
-display: none;
-
-`
 
 const BodyBox = ({ onLogout }) => {
 
@@ -258,20 +116,20 @@ const BodyBox = ({ onLogout }) => {
     };
 
     return (
-        <BoxContainer>
+        <S.BoxContainer>
             <MainHeader onLogout={onLogout} page="main_w" />
 
             <TitleBox title="라이브 방송 대본 생성" text="제품 정보가 포함된 PDF를 업로드하면 AI가 방송 대본을 자동으로
                     생성해 드립니다."/>
 
-            <Main>
-                <BoxWrapper>
-                    <Box>
-                        <Form>
-                            <FormRow col={2}>
-                                <FormGroup>
-                                    <FormLabel>방송 카테고리</FormLabel>
-                                    <SelectControl
+            <S.Main>
+                <S.BoxWrapper>
+                    <S.Box>
+                        <S.Form>
+                            <S.FormRow col={2}>
+                                <S.FormGroup>
+                                    <S.FormLabel>방송 카테고리</S.FormLabel>
+                                    <S.SelectControl
                                         value={category}
                                         onChange={(e) => setCategory(e.target.value)}
                                     >
@@ -279,112 +137,113 @@ const BodyBox = ({ onLogout }) => {
                                         <option value="food">푸드</option>
                                         <option value="fashion">패션</option>
                                         <option value="beauty">뷰티</option>
-                                    </SelectControl>
-                                </FormGroup>
-                                <FormGroup >
-                                    <FormLabel>방송톤</FormLabel>
-                                    <SelectControl
+                                    </S.SelectControl>
+                                </S.FormGroup>
+                                <S.FormGroup >
+                                    <S.FormLabel>방송톤</S.FormLabel>
+                                    <S.SelectControl
                                         value={tone}
                                         onChange={(e) => setTone(e.target.value)}
                                     >
                                         <option value="기본">기본</option>
                                         <option value="간결">간결</option>
                                         <option value="격식">격식</option>
-                                    </SelectControl>
-                                </FormGroup>
+                                    </S.SelectControl>
+                                </S.FormGroup>
 
-                            </FormRow>
-                            <FormRow col={2}>
-                                <FormGroup>
-                                    <FormLabel>방송 테마</FormLabel>
-                                    <FormControl
+                            </S.FormRow>
+                            <S.FormRow col={2}>
+                                <S.FormGroup>
+                                    <S.FormLabel>방송 테마</S.FormLabel>
+                                    <S.FormControl
                                         id="theme"
                                         type="text"
                                         placeholder="예시 : 개강을 앞둔 대학생을 위한 노트북 라이브"
                                         value={MC1}
                                         onChange={(e) => setTheme(e.target.value)}
                                     />
-                                </FormGroup>
+                                </S.FormGroup>
 
-                                <FormGroup>
-                                    <FormLabel>인력 구성</FormLabel>
-                                    <SelectControl
+                                <S.FormGroup>
+                                    <S.FormLabel>인력 구성</S.FormLabel>
+                                    <S.SelectControl
                                         value={formation}
                                         onChange={(e) => setFormation(e.target.value)}>
                                         <option value="si">쇼호스트 & 쇼호스트</option>
                                         <option value="ss">쇼호스트 & 인플루언서</option>
-                                    </SelectControl>
-                                </FormGroup>
-                            </FormRow>
-                            <FormRow>
-                                <FormGroup>
-                                    <FormLabel>메인 진행자</FormLabel>
-                                    <FormControl
+                                    </S.SelectControl>
+                                </S.FormGroup>
+                            </S.FormRow>
+                            <S.FormRow>
+                                <S.FormGroup>
+                                    <S.FormLabel>메인 진행자</S.FormLabel>
+                                    <S.FormControl
                                         id="MC1"
                                         type="text"
                                         placeholder="예시 : 잇섭"
                                         value={MC1}
                                         onChange={(e) => setMC1(e.target.value)}
                                     />
-                                </FormGroup>
+                                </S.FormGroup>
 
-                                <FormGroup>
-                                    <FormLabel>서브 진행자</FormLabel>
-                                    <FormControl
+                                <S.FormGroup>
+                                    <S.FormLabel>서브 진행자</S.FormLabel>
+                                    <S.FormControl
                                         id="MC2"
                                         type="text"
                                         placeholder="예시 : 백종원"
                                         value={MC2}
                                         onChange={(e) => setMC2(e.target.value)}
                                     />
-                                </FormGroup>
-                                <FormGroup>
-                                    <FormLabel>프로그램명</FormLabel>
-                                    <FormControl
+                                </S.FormGroup>
+                                <S.FormGroup>
+                                    <S.FormLabel>프로그램명</S.FormLabel>
+                                    <S.FormControl
                                         id="programtitle"
                                         type="text"
                                         placeholder="예시 : 핫IT슈, 백주부의 라방"
                                         value={programtitle}
                                         onChange={(e) => setProgramTitle(e.target.value)}
                                     />
-                                </FormGroup>
-                            </FormRow>
-                            <FormRow col={4}>
-                                <FormGroup>
-                                    <FormLabel>방송 시간</FormLabel>
-                                    <FormControl
+                                </S.FormGroup>
+                            </S.FormRow>
+                            <S.FormRow col={4}>
+                                <S.FormGroup>
+                                    <S.FormLabel>방송 시간</S.FormLabel>
+                                    <S.FormControl
                                         id="liveTime"
                                         type="text"
                                         placeholder="예시 : 60 (반드시 숫자로 입력)"
                                         value={liveTime}
                                         onChange={(e) => setLiveTime(e.target.value)}
                                     />
-                                </FormGroup>
+                                </S.FormGroup>
 
-                                <FormGroup>
-                                    <FormLabel>세션 수</FormLabel>
-                                    <SelectControl
-                                        value={session}
-                                        onChange={(e) => setSession(e.target.value)}>
-                                        <option value="1">1개</option>
-                                        <option value="2">2개</option>
-                                        <option value="3">3개</option>
-                                        <option value="4">4개</option>
-                                    </SelectControl>
-                                </FormGroup>
-                                <FormGroup>
-                                    <FormLabel>방송 시간대</FormLabel>
-                                    <FormControl
+                                <S.FormGroup>
+                                    <S.FormLabel>방송 시간대</S.FormLabel>
+                                    <S.FormControl
                                         id="liveClock"
                                         type="text"
                                         placeholder="예시 : 12시 30분"
                                         value={liveClock}
                                         onChange={(e) => setLiveClock(e.target.value)}
                                     />
-                                </FormGroup>
-                                <FormGroup>
-                                    <FormLabel>퀴즈 횟수</FormLabel>
-                                    <SelectControl
+                                </S.FormGroup>
+
+                                <S.FormGroup>
+                                    <S.FormLabel>세션 수</S.FormLabel>
+                                    <S.SelectControl
+                                        value={session}
+                                        onChange={(e) => setSession(e.target.value)}>
+                                        <option value="1">1개</option>
+                                        <option value="2">2개</option>
+                                        <option value="3">3개</option>
+                                        <option value="4">4개</option>
+                                    </S.SelectControl>
+                                </S.FormGroup>
+                                <S.FormGroup>
+                                    <S.FormLabel>퀴즈 횟수</S.FormLabel>
+                                    <S.SelectControl
                                         value={quiz}
                                         onChange={(e) => setQuiz(e.target.value)}>
                                         <option value="0">0회</option>
@@ -392,48 +251,48 @@ const BodyBox = ({ onLogout }) => {
                                         <option value="2">2회</option>
                                         <option value="3">3회</option>
                                         <option value="4">4회</option>
-                                    </SelectControl>
-                                </FormGroup>
-                            </FormRow>
-                            <FormGroup>
-                                <FormLabel>강조 포인트</FormLabel>
-                                <FormControl
+                                    </S.SelectControl>
+                                </S.FormGroup>
+                            </S.FormRow>
+                            <S.FormGroup>
+                                <S.FormLabel>강조 포인트</S.FormLabel>
+                                <S.FormControl
                                     id="highlight"
                                     type="text"
                                     placeholder="예시 : 사용 환경 설명, 사용 편의성 강조"
                                     value={highlight}
                                     onChange={(e) => setHighlight(e.target.value)}
                                 />
-                            </FormGroup>
+                            </S.FormGroup>
 
-                            <FormGroup>
-                                <FormLabel>사용 지양 언어</FormLabel>
-                                <FormControl
+                            <S.FormGroup>
+                                <S.FormLabel>사용 지양 언어</S.FormLabel>
+                                <S.FormControl
                                     id="avoid-language"
                                     type="text"
                                     placeholder="예시 : 과한 최상급 표현, 경쟁사 비하 표현 지양"
                                     value={avoidLanguage}
                                     onChange={(e) => setAvoidLanguage(e.target.value)}
                                 />
-                            </FormGroup>
-                            <FormRow col={2}>
-                                <FormGroup>
-                                    <FormLabel>사용모델</FormLabel>
-                                    <SelectControl
+                            </S.FormGroup>
+                            <S.FormRow col={2}>
+                                <S.FormGroup>
+                                    <S.FormLabel>사용모델</S.FormLabel>
+                                    <S.SelectControl
                                         value={model}
                                         onChange={(e) => setModel(e.target.value)}>
                                         <option value="claude-sonnet-4">claude-sonnet-4.6</option>
                                         {/* 나중에 모델 추가하면 option만 늘리면 됨 */}
-                                    </SelectControl>
-                                </FormGroup>
-                            </FormRow>
-                        </Form>
+                                    </S.SelectControl>
+                                </S.FormGroup>
+                            </S.FormRow>
+                        </S.Form>
 
 
                         {/* PDF 업로드 영역 */}
 
-                        <UploadBox onClick={handleUploadBoxClick}>
-                            <FileBox
+                        <S.UploadBox onClick={handleUploadBoxClick}>
+                            <S.FileBox
                                 ref={fileInputRef}
                                 id="file-input"
                                 type="file"
@@ -454,35 +313,35 @@ const BodyBox = ({ onLogout }) => {
                                 </div>
                             ) : (
                                 <div>
-                                    <UploadIcon src={Cloud} />
-                                    <UploadText>
+                                    <S.UploadIcon src={Cloud} />
+                                    <S.UploadText>
                                         여러 개의 PDF 파일을 업로드 하거나 여기로 드래그 하세요.
-                                    </UploadText>
+                                    </S.UploadText>
                                 </div>
                             )}
-                        </UploadBox>
+                        </S.UploadBox>
 
-                        <FormActions>
-                            <BtnPrimary
+                        <S.FormActions>
+                            <S.BtnPrimary
                                 onClick={generateScript}
                                 disabled={!file || loading}
                                 className="generate-btn"
                             >
                                 {loading ? "생성 중... (약 2분 소요)" : "대본 생성하기"}
-                            </BtnPrimary>
-                            <BtnSecondary onClick={handleReset} className="reset-btn">
+                            </S.BtnPrimary>
+                            <S.BtnSecondary onClick={handleReset} className="reset-btn">
                                 초기화하기
-                            </BtnSecondary>
-                        </FormActions>
+                            </S.BtnSecondary>
+                        </S.FormActions>
 
                         {error && <div className="error-message">⚠️ {error}</div>}
 
-                    </Box>
+                    </S.Box>
                     {loading && <Overlay />}
-                </BoxWrapper>
-            </Main>
+                </S.BoxWrapper>
+            </S.Main>
             <Footer colour="#09CE74" />
-        </BoxContainer >
+        </S.BoxContainer >
 
 
 
