@@ -3,7 +3,8 @@
 import { BROADCAST_GUIDELINES } from './ITConstants.js';
 import { CLOTHES_BROADCAST_GUIDELINES } from './ClothesConstants.js';
 import { FOOD_BROADCAST_GUIDELINES } from './FoodConstants.js';
-import { BEAUTY_BROADCAST_GUIDELINES } from './BeautyConstants.js'
+import { BEAUTY_BROADCAST_GUIDELINES } from './BeautyConstants.js';
+import { SHORT_BROADCAST_GUIDELINES } from './ShortGuide.js';
 import sharp from 'sharp';
 import express from 'express';
 import cors from 'cors';
@@ -237,6 +238,13 @@ app.post('/api/generate-script', upload.array('pdf', 10), async (req, res) => {
     }
     else {
       selectedGuidelines = BROADCAST_GUIDELINES;
+    }
+    // 💡 프론트에서 온 값을 숫자로 바꿔서 바로 대소 비교!
+    const time = Number(liveTime);
+
+    if (time > 0 && time <= 30) {
+      // 30분 이하의 짧은 방송이면 숏폼 가이드로 교체
+      selectedGuidelines = SHORT_BROADCAST_GUIDELINES;
     }
 
 

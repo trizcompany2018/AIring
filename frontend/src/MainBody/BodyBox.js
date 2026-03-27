@@ -355,7 +355,7 @@ const BodyBox = ({ onLogout }) => {
                                     <FormControl
                                         id="liveTime"
                                         type="text"
-                                        placeholder="예시 : 60분"
+                                        placeholder="예시 : 60 (반드시 숫자로 입력)"
                                         value={liveTime}
                                         onChange={(e) => setLiveTime(e.target.value)}
                                     />
