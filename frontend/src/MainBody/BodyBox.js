@@ -159,7 +159,7 @@ const BodyBox = ({ onLogout }) => {
                                         id="theme"
                                         type="text"
                                         placeholder="예시 : 개강을 앞둔 대학생을 위한 노트북 라이브"
-                                        value={MC1}
+                                        value={theme}
                                         onChange={(e) => setTheme(e.target.value)}
                                     />
                                 </S.FormGroup>
