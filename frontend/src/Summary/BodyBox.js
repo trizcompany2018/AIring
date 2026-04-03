@@ -159,7 +159,8 @@ const BodyBox = ({ onLogout }) => {
 
             if (response.data.success) {
                 const scriptText = response.data.summary || "";
-                navigate("/result", { state: { script: scriptText } });
+                const statusText = "summary"
+                navigate("/result", { state: { script: scriptText, status: statusText } });
                 console.log("FULL RESPONSE:", response.data);
             } else {
                 setError("요약본 생성에 실패했습니다.");

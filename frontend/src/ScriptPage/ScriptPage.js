@@ -1,22 +1,21 @@
-import MainHeader from "../MainHeader/MainHeader";
-import * as S from './ScriptPage.styles.js'
 import { useLocation, useNavigate } from "react-router-dom";
-import "../App.css";
-import Footer from '../Footer/Footer.js'
-import ReactMarkdown from 'react-markdown'
-import jsPDF from 'jspdf'
-import html2canvas from 'html2canvas'
 import { useRef } from "react";
-
+import ReactMarkdown from 'react-markdown';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import MainHeader from "../MainHeader/MainHeader";
+import Footer from '../Footer/Footer.js';
+import * as S from './ScriptPage.styles';
+import * as T from '../MainBody/BodyBox.styles.js'
 
 const ScriptPage = ({ onLogout }) => {
     const location = useLocation();
     const navigate = useNavigate();
-
     const scriptRef = useRef(null);
 
     // ✅ 상위에서 넘겨준 script
     const script = location.state?.script || "";
+    const status = location.state?.status || "";
 
     // script 없이 직접 /result 들어오면 홈으로 돌려보내기
     if (!script) {
@@ -24,12 +23,11 @@ const ScriptPage = ({ onLogout }) => {
         return null;
     }
 
+    // ✅ 복사하기 함수
     const handleCopy = () => {
         navigator.clipboard
             .writeText(script)
-            .then(() => {
-                alert("대본이 클립보드에 복사되었습니다!");
-            })
+            .then(() => alert("대본이 클립보드에 복사되었습니다!"))
             .catch((err) => {
                 console.error(err);
                 alert("복사에 실패했습니다. 브라우저 권한을 확인해주세요.");
@@ -53,7 +51,6 @@ const ScriptPage = ({ onLogout }) => {
 
             // 2. PDF 생성 (A4 사이즈 기준)
             const pdf = new jsPDF('p', 'mm', 'a4');
-
             const margin = 20;
             const imgWidth = 210 - (margin * 2); // A4 가로 mm
             const pageHeight = 297; // A4 세로 mm
@@ -82,16 +79,20 @@ const ScriptPage = ({ onLogout }) => {
         }
     };
 
+    // ✅ 대본 생성 함수 (이후 구현 필요)
+    const handleGenerateScript = async () => {
+        // ...
+    };
+
+    // ✅ 이전 페이지로 돌아가기
     const handleBack = () => {
-        // 바로 이전 페이지로
         navigate(-1);
-        // 또는 항상 업로드 화면으로 가고 싶으면:
-        // navigate("/", { replace: true });
     };
 
     return (
         <S.Container>
             <MainHeader onLogout={onLogout} page="main_g" />
+
             <S.Page>
                 <S.BoxContainer>
                     <S.BoxHeader>
@@ -103,17 +104,34 @@ const ScriptPage = ({ onLogout }) => {
                 <S.Main>
                     <S.Box>
                         <S.ScriptContainer ref={scriptRef} style={{ backgroundColor: '#fff', padding: '20px' }}>
-                            <S.ScriptHeader>📝 생성된 방송 대본</S.ScriptHeader>
-                            <S.TextBox><ReactMarkdown>{script}</ReactMarkdown></S.TextBox>
+                            <S.ScriptHeader>
+                                {status === "script" ? "📝 생성된 방송 대본" : "📝 생성된 방송 요약본"}
+                            </S.ScriptHeader>
+                            <S.TextBox>
+                                <ReactMarkdown>{script}</ReactMarkdown>
+                            </S.TextBox>
                         </S.ScriptContainer>
-
                     </S.Box>
+
                     <S.FormActions>
-                        <S.BtnPrimary onClick={handleDownloadPDF}>PDF 다운</S.BtnPrimary>
-                        <S.BtnPrimary onClick={handleCopy}>복사하기</S.BtnPrimary>
+                        {/* PDF 다운로드 버튼 */}
+                        {status === "script" ? (
+                            <S.BtnPrimary onClick={handleDownloadPDF}>PDF 다운</S.BtnPrimary>
+                        ) : (
+                            <S.BtnSecondary onClick={handleDownloadPDF}>PDF 다운</S.BtnSecondary>
+                        )}
+
+                        {/* 복사하기 / 대본생성 버튼 */}
+                        {status === "script" ? (
+                            <S.BtnPrimary onClick={handleCopy}>복사하기</S.BtnPrimary>
+                        ) : (
+                            <S.BtnPrimary onClick={handleGenerateScript}>대본생성</S.BtnPrimary>
+                        )}
+
                         <S.BtnSecondary onClick={handleBack}>이전</S.BtnSecondary>
                     </S.FormActions>
                 </S.Main>
+
                 <Footer />
             </S.Page>
         </S.Container>
