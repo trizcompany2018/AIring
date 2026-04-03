@@ -43,11 +43,28 @@ export const Box = styled.div`
   border-radius: 20px;
   padding: 40px;
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
-  border: 2px solid #05da88;
+  border: ${({ showFull }) => (showFull ? '2px solid #05da88' : '2px solid #grey')};
   display: flex;
   flex-direction: column;
   align-items: center;
   min-height: 10rem;
+
+  height: ${({ showFull }) => (showFull ? 'auto' : '20rem')};
+  
+  /* 💡 줄어들었을 때 내부 내용이 넘치면 스크롤 생성 */
+  overflow-y: ${({ showFull }) => (showFull ? 'visible' : 'auto')};
+  
+  /* 부드러운 전환 효과 */
+  transition: height 0.8s ease-in-out;
+
+  /* 스크롤바가 너무 투박하면 예쁘게 다듬어주기 (선택사항) */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #05da88;
+    border-radius: 10px;
+  }
 `;
 
 export const PageTitle = styled.p`
@@ -123,6 +140,5 @@ font-size: 14px;
 white-space: pre-wrap;      /* 줄바꿈 유지 + 자동 줄바꿈 */
 word-break: break-word;     /* 긴 단어도 강제 줄바꿈 */
 overflow-wrap: break-word;  /* 브라우저 호환 */
-
 
 `

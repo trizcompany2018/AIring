@@ -1,17 +1,18 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import ReactMarkdown from 'react-markdown';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import MainHeader from "../MainHeader/MainHeader";
 import Footer from '../Footer/Footer.js';
 import * as S from './ScriptPage.styles';
-import * as T from '../MainBody/BodyBox.styles.js'
+import InputContainer from "../MainBody/InputContainer.js";
 
 const ScriptPage = ({ onLogout }) => {
     const location = useLocation();
     const navigate = useNavigate();
     const scriptRef = useRef(null);
+    const [clickState, setClickState] = useState(false);
 
     // ✅ 상위에서 넘겨준 script
     const script = location.state?.script || "";
@@ -79,10 +80,6 @@ const ScriptPage = ({ onLogout }) => {
         }
     };
 
-    // ✅ 대본 생성 함수 (이후 구현 필요)
-    const handleGenerateScript = async () => {
-        // ...
-    };
 
     // ✅ 이전 페이지로 돌아가기
     const handleBack = () => {
@@ -102,7 +99,7 @@ const ScriptPage = ({ onLogout }) => {
                 </S.BoxContainer>
 
                 <S.Main>
-                    <S.Box>
+                    <S.Box showFull={!clickState}>
                         <S.ScriptContainer ref={scriptRef} style={{ backgroundColor: '#fff', padding: '20px' }}>
                             <S.ScriptHeader>
                                 {status === "script" ? "📝 생성된 방송 대본" : "📝 생성된 방송 요약본"}
@@ -125,11 +122,12 @@ const ScriptPage = ({ onLogout }) => {
                         {status === "script" ? (
                             <S.BtnPrimary onClick={handleCopy}>복사하기</S.BtnPrimary>
                         ) : (
-                            <S.BtnPrimary onClick={handleGenerateScript}>대본생성</S.BtnPrimary>
+                            <S.BtnPrimary onClick={() => { setClickState(!clickState) }}>대본생성</S.BtnPrimary>
                         )}
 
                         <S.BtnSecondary onClick={handleBack}>이전</S.BtnSecondary>
                     </S.FormActions>
+                    {clickState && <InputContainer summary="summary" />}
                 </S.Main>
 
                 <Footer />

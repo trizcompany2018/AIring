@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Cloud from '../upload.png'
 import Overlay from "./Overlay";
 
-const InputContainer = () => {
+const InputContainer = ({ summary }) => {
 
     const [file, setFile] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -283,36 +283,38 @@ const InputContainer = () => {
 
                 {/* PDF 업로드 영역 */}
 
-                <S.UploadBox onClick={handleUploadBoxClick}>
-                    <S.FileBox
-                        ref={fileInputRef}
-                        id="file-input"
-                        type="file"
-                        accept=".pdf"
-                        multiple // ⭐ 핵심! 다중 선택 허용
-                        onChange={handleFileChange}
-                        className="file-input"
-                    />
-                    {file.length > 0 ? (
-                        <div>
-                            <p>📄 선택된 파일 ({file.length}개):</p>
-                            {/* 여러 개의 파일 이름을 순회하며 보여줌 */}
-                            {file.map((f, index) => (
-                                <p key={index} className="file-name" style={{ fontSize: '13px', margin: '4px 0' }}>
-                                    - {f.name}
-                                </p>
-                            ))}
-                        </div>
-                    ) : (
-                        <div>
-                            <S.UploadIcon src={Cloud} />
-                            <S.UploadText>
-                                여러 개의 PDF 파일을 업로드 하거나 여기로 드래그 하세요.
-                            </S.UploadText>
-                        </div>
-                    )}
-                </S.UploadBox>
-
+                {summary === "summmary"
+                    &&
+                    <S.UploadBox onClick={handleUploadBoxClick}>
+                        <S.FileBox
+                            ref={fileInputRef}
+                            id="file-input"
+                            type="file"
+                            accept=".pdf"
+                            multiple // ⭐ 핵심! 다중 선택 허용
+                            onChange={handleFileChange}
+                            className="file-input"
+                        />
+                        {file.length > 0 ? (
+                            <div>
+                                <p>📄 선택된 파일 ({file.length}개):</p>
+                                {/* 여러 개의 파일 이름을 순회하며 보여줌 */}
+                                {file.map((f, index) => (
+                                    <p key={index} className="file-name" style={{ fontSize: '13px', margin: '4px 0' }}>
+                                        - {f.name}
+                                    </p>
+                                ))}
+                            </div>
+                        ) : (
+                            <div>
+                                <S.UploadIcon src={Cloud} />
+                                <S.UploadText>
+                                    여러 개의 PDF 파일을 업로드 하거나 여기로 드래그 하세요.
+                                </S.UploadText>
+                            </div>
+                        )}
+                    </S.UploadBox>
+                }
                 <S.FormActions>
                     <S.BtnPrimary
                         onClick={generateScript}
@@ -321,9 +323,12 @@ const InputContainer = () => {
                     >
                         {loading ? "생성 중... (약 2분 소요)" : "대본 생성하기"}
                     </S.BtnPrimary>
-                    <S.BtnSecondary onClick={handleReset} className="reset-btn">
-                        초기화하기
-                    </S.BtnSecondary>
+                    {summary !== "summary"
+                        &&
+                        <S.BtnSecondary onClick={handleReset} className="reset-btn">
+                            초기화하기
+                        </S.BtnSecondary>
+                    }
                 </S.FormActions>
 
                 {error && <div className="error-message">⚠️ {error}</div>}
