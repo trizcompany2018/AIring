@@ -180,13 +180,33 @@ app.post('/api/generate-script', upload.array('pdf', 10), async (req, res) => {
     console.log('==============================================');
 
     let productInfo = '';
-    if (req.file) {
-      const pdfData = await pdfParse(req.file.buffer);
-      productInfo = pdfData.text || '';
+
+    // 💡 분기 처리 시작
+    if (info && info.trim() !== '') {
+      // 우선순위 1: info라는 이름으로 텍스트가 넘어온 경우
+      console.log('[DEBUG] Using text info from frontend');
+      productInfo = info;
+    }
+    else if (req.files && req.files.length > 0) {
+      // 우선순위 2: 텍스트가 없고 파일(PDF)이 넘어온 경우
+      console.log(`[DEBUG] Using ${req.files.length} PDF files`);
+
+      // 여러 개의 PDF 파일을 순회하며 텍스트를 하나로 합침
+      for (const file of req.files) {
+        const pdfData = await pdfParse(file.buffer);
+        productInfo += (pdfData.text || '') + '\n\n';
+      }
+    }
+
+    // 만약 둘 다 없다면 에러 처리 (선택 사항)
+    if (!productInfo.trim()) {
+      console.error('[ERROR] No product information found (text or PDF)');
+      // return respond.json(400, { success: false, error: '제품 정보가 없습니다.' });
     }
 
     // ✅ 프론트에서 온 값들
     const {
+      info,
       highlight = '',
       avoidLanguage = '',
       tone = '기본',

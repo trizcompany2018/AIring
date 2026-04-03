@@ -5,9 +5,10 @@ import { useNavigate } from "react-router-dom";
 import Cloud from '../upload.png'
 import Overlay from "./Overlay";
 
-const InputContainer = ({ summary }) => {
+const InputContainer = ({ summary, info }) => {
 
     const [file, setFile] = useState([]);
+    const [shortInfo,] = useState(info);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [highlight, setHighlight] = useState('');
@@ -63,6 +64,7 @@ const InputContainer = ({ summary }) => {
         file.forEach((file) => {
             formData.append("pdf", file);
         });
+        formData.append("info", shortInfo);
         formData.append("highlight", highlight);            // 🔥 강조포인트
         formData.append("avoidLanguage", avoidLanguage);    // 🔥 지양 언어
         formData.append("tone", tone);                      // 🔥 방송톤
@@ -291,7 +293,7 @@ const InputContainer = ({ summary }) => {
                             id="file-input"
                             type="file"
                             accept=".pdf"
-                            multiple // ⭐ 핵심! 다중 선택 허용
+                            multiple
                             onChange={handleFileChange}
                             className="file-input"
                         />
@@ -337,10 +339,7 @@ const InputContainer = ({ summary }) => {
             {loading && <Overlay />}
         </S.BoxWrapper>
 
-
-
     )
-
 
 }
 

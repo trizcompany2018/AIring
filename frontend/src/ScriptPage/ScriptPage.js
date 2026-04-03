@@ -127,7 +127,7 @@ const ScriptPage = ({ onLogout }) => {
 
                         <S.BtnSecondary onClick={handleBack}>이전</S.BtnSecondary>
                     </S.FormActions>
-                    {clickState && <InputContainer summary="summary" />}
+                    {clickState && <InputContainer summary="summary" info={script} />}
                 </S.Main>
 
                 <Footer />
