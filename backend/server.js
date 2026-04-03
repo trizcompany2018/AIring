@@ -157,62 +157,28 @@ app.post('/api/test-script', async (req, res) => {
   }
 });
 
-// ===== 실제 PDF 업로드 버전 =====
 app.post('/api/generate-script', upload.array('pdf', 10), async (req, res) => {
   const respond = respondOnce(res);
-
-  const timeoutMs = TIMEOUT_MS;
   const controller = new AbortController();
-  const timer = setTimeout(() => {
-    console.error(`[TIMEOUT] ${timeoutMs}ms elapsed → aborting Anthropic call (/api/generate-script)`);
-    controller.abort();
-  }, timeoutMs);
+  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
   try {
-    //server test용 로그
+    // 1. 프론트엔드 데이터 수신 확인 (디버깅 로그)
     console.log('======= [DEBUG] Frontend Data Received =======');
-    console.log('1. req.body:', JSON.stringify(req.body, null, 2)); // 전체 텍스트 데이터
-    console.log('2. req.file:', req.file ? {
-      originalname: req.file.originalname,
-      size: req.file.size,
-      mimetype: req.file.mimetype
-    } : 'No File Uploaded');
+    console.log('1. req.body:', JSON.stringify(req.body, null, 2));
+
+    // 💡 중요: upload.array를 쓰면 req.file이 아니라 req.files(배열)를 확인해야 합니다.
+    console.log('2. req.files count:', req.files ? req.files.length : 0);
     console.log('==============================================');
 
-    let productInfo = '';
-
-    // 💡 분기 처리 시작
-    if (info && info.trim() !== '') {
-      // 우선순위 1: info라는 이름으로 텍스트가 넘어온 경우
-      console.log('[DEBUG] Using text info from frontend');
-      productInfo = info;
-    }
-    else if (req.files && req.files.length > 0) {
-      // 우선순위 2: 텍스트가 없고 파일(PDF)이 넘어온 경우
-      console.log(`[DEBUG] Using ${req.files.length} PDF files`);
-
-      // 여러 개의 PDF 파일을 순회하며 텍스트를 하나로 합침
-      for (const file of req.files) {
-        const pdfData = await pdfParse(file.buffer);
-        productInfo += (pdfData.text || '') + '\n\n';
-      }
-    }
-
-    // 만약 둘 다 없다면 에러 처리 (선택 사항)
-    if (!productInfo.trim()) {
-      console.error('[ERROR] No product information found (text or PDF)');
-      // return respond.json(400, { success: false, error: '제품 정보가 없습니다.' });
-    }
-
-    // ✅ 프론트에서 온 값들
+    // 2. 변수 선언 (Destructuring) - 사용하기 전에 먼저 선언해야 에러가 안 납니다.
     const {
-      info,
+      info, // 요약본 텍스트
       highlight = '',
       avoidLanguage = '',
       tone = '기본',
       category = '',
       programtitle = '',
-      model, // 선택 모델 (없으면 기본 MODEL_ID 사용)
       MC1,
       MC2,
       liveTime,
@@ -222,6 +188,29 @@ app.post('/api/generate-script', upload.array('pdf', 10), async (req, res) => {
       theme,
       formation,
     } = req.body;
+
+    let productInfo = '';
+
+    // 3. 제품 정보 추출 분기 처리 (텍스트 우선 -> 파일 순서)
+    if (info && info.trim() !== '') {
+      console.log('[DEBUG] 텍스트 정보(info)를 사용하여 대본을 생성합니다.');
+      productInfo = info;
+    }
+    else if (req.files && req.files.length > 0) {
+      console.log(`[DEBUG] ${req.files.length}개의 PDF 파일을 분석하여 정보를 추출합니다.`);
+
+      // 여러 개의 PDF 내용을 하나로 합침
+      for (const file of req.files) {
+        const pdfData = await pdfParse(file.buffer);
+        productInfo += (pdfData.text || '') + '\n\n';
+      }
+    }
+
+    // 4. 정보가 아예 없는 경우 방어 코드
+    if (!productInfo || productInfo.trim() === '') {
+      console.error('[ERROR] 제품 정보가 입력되지 않았습니다.');
+      // 필요하다면 여기서 리턴 처리 가능
+    }
 
     // ✅ 모델 선택 (프론트가 보낸 게 있으면 그거, 없으면 기존 상수)
     const modelId = MODEL_ID;
