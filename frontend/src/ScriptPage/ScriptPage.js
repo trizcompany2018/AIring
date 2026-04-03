@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import ReactMarkdown from 'react-markdown';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
@@ -13,10 +13,32 @@ const ScriptPage = ({ onLogout }) => {
     const navigate = useNavigate();
     const scriptRef = useRef(null);
     const [clickState, setClickState] = useState(false);
+    const anchrRef1 = useRef(null);
+    const anchrRef2 = useRef(null);
 
     // ✅ 상위에서 넘겨준 script
     const script = location.state?.script || "";
     const status = location.state?.status || "";
+
+    useEffect(() => {
+        setClickState(false);
+        window.scrollTo(0, 0);
+    }, [script])
+
+    useEffect(() => {
+        // 리액트가 UI를 다 그린 뒤에 움직이도록 약간의 시간(100ms)을 줍니다.
+        const timer = setTimeout(() => {
+            if (clickState === true) {
+                // B 위치(입력창)로 스르륵
+                anchrRef2.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                // A 위치(대본상단)로 스르륵
+                anchrRef1.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }, 100);
+
+        return () => clearTimeout(timer);
+    }, [clickState]);
 
     // script 없이 직접 /result 들어오면 홈으로 돌려보내기
     if (!script) {
@@ -33,6 +55,11 @@ const ScriptPage = ({ onLogout }) => {
                 console.error(err);
                 alert("복사에 실패했습니다. 브라우저 권한을 확인해주세요.");
             });
+    };
+
+    const handleGenerateButtonClick = () => {
+        setClickState(!clickState);
+
     };
 
     // ✅ PDF 다운로드 함수
@@ -98,6 +125,7 @@ const ScriptPage = ({ onLogout }) => {
                     </S.BoxHeader>
                 </S.BoxContainer>
 
+                <div ref={anchrRef1} style={{ height: '1px' }} />
                 <S.Main>
                     <S.Box showFull={!clickState}>
                         <S.ScriptContainer ref={scriptRef} style={{ backgroundColor: '#fff', padding: '20px' }}>
@@ -122,11 +150,12 @@ const ScriptPage = ({ onLogout }) => {
                         {status === "script" ? (
                             <S.BtnPrimary onClick={handleCopy}>복사하기</S.BtnPrimary>
                         ) : (
-                            <S.BtnPrimary onClick={() => { setClickState(!clickState) }}>대본생성</S.BtnPrimary>
+                            clickState ? (<S.BtnPrimary onClick={handleGenerateButtonClick}>접기</S.BtnPrimary>) : (<S.BtnPrimary onClick={handleGenerateButtonClick}>대본생성</S.BtnPrimary>)
                         )}
 
                         <S.BtnSecondary onClick={handleBack}>이전</S.BtnSecondary>
                     </S.FormActions>
+                    <div ref={anchrRef2} style={{ height: '1px' }} />
                     {clickState && <InputContainer summary="summary" info={script} />}
                 </S.Main>
 

@@ -112,7 +112,7 @@ const Login = ({ onLogin }) => {
         if (password === CORRECT_PASSWORD) {
             setIsError(false);
             onLogin();
-            navigate('/main');
+            navigate('/summary');
         } else {
             // 비밀번호 틀렸을 때
             setPassword("")
@@ -140,7 +140,7 @@ const Login = ({ onLogin }) => {
 
     return (
         <Container>
-            <MainHeader onLogout={onLogout} page="login"/>
+            <MainHeader onLogout={onLogout} page="login" />
             <LoginBox>
                 <Header>
                     <LogoImage src={Logo} />
