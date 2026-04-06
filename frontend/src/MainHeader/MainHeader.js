@@ -1,8 +1,8 @@
-import Logo from "./main_logo2.png";
-import WhiteLogo from "./logo2.png"
-import TrizLogo from './triz.png'
-import Logout from "./logout.png";
-import Group from './Group.png'
+import Logo from "./image/main_logo2.png";
+import WhiteLogo from "./image/logo2.png"
+import TrizLogo from './image/triz.png'
+import Logout from "./image/logout.png";
+import Group from './image/Group.png'
 import styled from "styled-components";
 
 import { useNavigate } from "react-router-dom";
@@ -55,16 +55,18 @@ const MainHeader = ({ onLogout, page }) => {
   return (
     <ContainerHeader page={page}>
       <Header>
-      {page === "main_w" ? (
-        <Image src={WhiteLogo} /> 
-      ) : page === "main_g" ? (
-        <Image src={Logo} />  
-      ) : (
-        <Image src={TrizLogo} />
-      )}
-      <LogoutContainer onClick={handleLogout}>
-        {page === "login" ?<LogoutImage src={Group} />  :<LogoutImage src={Logout} /> }
-      </LogoutContainer>
+        {/* 페이지에 따라 상단 로고색 변경 */}
+        {page === "main_w" ? (
+          <Image src={WhiteLogo} />
+        ) : page === "main_g" ? (
+          <Image src={Logo} />
+        ) : (
+          <Image src={TrizLogo} />
+        )}
+        {/* 로그아웃 처리 */}
+        <LogoutContainer onClick={handleLogout}>
+          {page === "login" ? <LogoutImage src={Group} /> : <LogoutImage src={Logout} />}
+        </LogoutContainer>
       </Header>
     </ContainerHeader>
   );

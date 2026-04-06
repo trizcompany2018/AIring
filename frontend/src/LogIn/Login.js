@@ -1,5 +1,5 @@
 import styled, { keyframes } from "styled-components";
-import Logo from '../MainBody/airup_logo.gif'
+import Logo from '../MainBody/image/airup_logo.gif'
 import LoginIcon from './login_icon.png'
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -32,12 +32,14 @@ width: 385px;
 
 `
 const Main = styled.main`
+
 display: flex;
 align-items: center;
 justify-content: center;
 
 `
 const LoginField = styled.div`
+
   display: flex;
   align-items: center;
   background: #ffffff;
@@ -49,21 +51,18 @@ const LoginField = styled.div`
   padding: 0 4px 0 24px;
   box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.15);
 
-
 `
-
 const LoginInput = styled.input`
+
   width: 760px;
   height: 52px;
   border: none;
   outline: none;
   font-size: 16px;
 
-
-
 `
-
 const LoginBtn = styled.button`
+
   border: none;
   background: none;
   cursor: pointer;
@@ -76,16 +75,16 @@ width: 26px;
 height: 26px;
 
 `
-
 const shake = keyframes`
+
   0% { transform: translateX(0); }
   20% { transform: translateX(-6px); }
   40% { transform: translateX(6px); }
   60% { transform: translateX(-6px); }
   80% { transform: translateX(6px); }
   100% { transform: translateX(0); }
-`;
 
+`;
 const LoginBox = styled.div`
 
 
@@ -94,15 +93,14 @@ flex-direction: column;
 align-items: center;
 justify-content: center;
 
-
 `
 
 const Login = ({ onLogin }) => {
 
     const navigate = useNavigate();
     const CORRECT_PASSWORD = "1q2w3e4r!";
-    const [password, setPassword] = useState('');
-    const [isError, setIsError] = useState(false);
+    const [password, setPassword] = useState('');  // 비밀번호 입력 state
+    const [isError, setIsError] = useState(false);  // 비밀번호 입력 실패 여부 확인 state
     const [defaultholder, setDefaultholder] = useState("비밀번호를 입력해주세요");
 
     const handleLogin = () => {
@@ -113,6 +111,7 @@ const Login = ({ onLogin }) => {
             setIsError(false);
             onLogin();
             navigate('/summary');
+
         } else {
             // 비밀번호 틀렸을 때
             setPassword("")
@@ -121,15 +120,16 @@ const Login = ({ onLogin }) => {
         }
     };
 
+    //엔터 입력 시 비밀번호 체크
     const handleKeyDown = (e) => {
         if (e.key === 'Enter') {
             handleLogin();
         }
     };
 
+    // 값이 바뀌었을때 값 업데이트
     const handleChange = (e) => {
         setPassword(e.target.value);
-        // ✅ 사용자가 다시 입력 시작하면 에러 상태 해제
         if (isError) setIsError(false);
 
     }
@@ -139,6 +139,8 @@ const Login = ({ onLogin }) => {
     }
 
     return (
+        // 로그인 기능 컴포넌트
+        // 로그인 시 비밀번호 일치 여부 확인
         <Container>
             <MainHeader onLogout={onLogout} page="login" />
             <LoginBox>
@@ -162,8 +164,6 @@ const Login = ({ onLogin }) => {
             <Footer colour="8F8F8F" />
         </Container>
     )
-
-
 
 }
 

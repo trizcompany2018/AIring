@@ -8,7 +8,6 @@ export const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
 `;
 
 export const Page = styled.div`
@@ -48,15 +47,11 @@ export const Box = styled.div`
   flex-direction: column;
   align-items: center;
   min-height: 10rem;
-
   height: ${({ showFull }) => (showFull ? 'auto' : '20rem')};
-  
   /* 💡 줄어들었을 때 내부 내용이 넘치면 스크롤 생성 */
   overflow-y: ${({ showFull }) => (showFull ? 'visible' : 'auto')};
-  
   /* 부드러운 전환 효과 */
   transition: height 0.8s ease-in-out;
-
   /* 스크롤바가 너무 투박하면 예쁘게 다듬어주기 (선택사항) */
   &::-webkit-scrollbar {
     width: 8px;
@@ -66,19 +61,16 @@ export const Box = styled.div`
     border-radius: 10px;
   }
 `;
-
 export const PageTitle = styled.p`
   font-size: 40px;
   font-weight: 700;
   margin-bottom: 8px;
 `;
-
 export const PageSubTitle = styled.p`
   font-size: 14px;
   font-weight: 400;
   color: #4b5563;
 `;
-
 export const FormActions = styled.div`
   display: flex;
   gap: 20px;
@@ -88,7 +80,6 @@ export const FormActions = styled.div`
   justify-content: center;
   width: 80vw;
 `;
-
 export const BtnPrimary = styled.button`
   width: 300px;
   height: 48px;
@@ -103,7 +94,6 @@ export const BtnPrimary = styled.button`
   align-items: center;
   justify-content: center;
 `;
-
 export const BtnSecondary = styled.button`
   border-radius: 10px;
   border: none;
@@ -118,21 +108,15 @@ export const BtnSecondary = styled.button`
   align-items: center;
   justify-content: center;
 `;
-
 export const ScriptContainer = styled.div`
-
 font-size: 1rem;
-
 `
 export const ScriptHeader = styled.div`
-
 font-size: 20px;
 font-weight: 800;
 margin-bottom: 10px;
-
 `
 export const TextBox = styled.pre`
-
 margin: 10px;
 width: 70vw;
 font-family: "Pretendard";
@@ -140,5 +124,4 @@ font-size: 14px;
 white-space: pre-wrap;      /* 줄바꿈 유지 + 자동 줄바꿈 */
 word-break: break-word;     /* 긴 단어도 강제 줄바꿈 */
 overflow-wrap: break-word;  /* 브라우저 호환 */
-
 `

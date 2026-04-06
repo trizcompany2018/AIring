@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Body from './Summary/Body.js'
-import Event from './Event/Body.js'
 import Login from './LogIn/Login.js';
 import MainBody from './MainBody/MainBody.js';
 import ScriptPage from './ScriptPage/ScriptPage.js';
@@ -13,7 +12,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* 기본 경로는 Login */}
+        {/* 기본 경로는 로그인 페이지 */}
         <Route path="/" element={<Login onLogin={() => setIsLoggedIn(true)} />} />
 
         {/* 로그인했을 경우만 MainBody 접근 가능 */}
@@ -23,7 +22,7 @@ function App() {
             isLoggedIn ? <MainBody onLogout={() => setIsLoggedIn(false)} /> : <Navigate to="/" replace />
           }
         />
-        {/* 스크립트 생성 결과 확인 페이지*/}
+        {/* 스크립트/요약본 생성 결과 확인 페이지*/}
         <Route
           path="/result"
           element={
@@ -37,14 +36,7 @@ function App() {
             isLoggedIn ? <Body onLogout={() => setIsLoggedIn(false)} /> : <Navigate to="/" replace />
           }
         />
-        {/* 방송 이벤트 생성 페이지*/}
-        <Route
-          path="/event"
-          element={
-            isLoggedIn ? <Event onLogout={() => setIsLoggedIn(false)} /> : <Navigate to="/" replace />
-          }
-        />
-        {/* 방송 이벤트 생성 페이지*/}
+        {/* 뉴스 기사 생성 페이지*/}
         <Route
           path="/news"
           element={

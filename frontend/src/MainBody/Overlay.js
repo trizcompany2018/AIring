@@ -1,7 +1,7 @@
 import styled from "styled-components"
-import RoadingIcon from './roadingmotion_white.gif'
+import RoadingIcon from './image/roadingmotion_white.gif'
 
-const OverlayContainer =  styled.div`
+const OverlayContainer = styled.div`
 
   position: absolute;
   top: 0;

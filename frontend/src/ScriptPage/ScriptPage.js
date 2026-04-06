@@ -18,21 +18,23 @@ const ScriptPage = ({ onLogout }) => {
 
     // ✅ 상위에서 넘겨준 script
     const script = location.state?.script || "";
+    // script 생성 작업인지, 제품 요약 작업인지 확인하기
     const status = location.state?.status || "";
 
+    // 첫 접속 시 가장 상단으로 스크롤
     useEffect(() => {
         setClickState(false);
         window.scrollTo(0, 0);
     }, [script])
 
     useEffect(() => {
-        // 리액트가 UI를 다 그린 뒤에 움직이도록 약간의 시간(100ms)을 줍니다.
+        // 로딩될때까지 약간 텀 주기
         const timer = setTimeout(() => {
             if (clickState === true) {
-                // B 위치(입력창)로 스르륵
+                // 페이지 중간으로 이동(대본 생성 input box 입력용)
                 anchrRef2.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
             } else {
-                // A 위치(대본상단)로 스르륵
+                // 페이지 상단으로 이동(요약본 확인용)
                 anchrRef1.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }, 100);
@@ -46,7 +48,7 @@ const ScriptPage = ({ onLogout }) => {
         return null;
     }
 
-    // ✅ 복사하기 함수
+    // 전체 복사하기
     const handleCopy = () => {
         navigator.clipboard
             .writeText(script)
@@ -59,10 +61,9 @@ const ScriptPage = ({ onLogout }) => {
 
     const handleGenerateButtonClick = () => {
         setClickState(!clickState);
-
     };
 
-    // ✅ PDF 다운로드 함수
+    // PDF 다운로드 함수
     const handleDownloadPDF = async () => {
         const element = scriptRef.current;
         if (!element) return;
@@ -108,15 +109,14 @@ const ScriptPage = ({ onLogout }) => {
     };
 
 
-    // ✅ 이전 페이지로 돌아가기
+    // 이전 페이지로 돌아가기
     const handleBack = () => {
-        navigate(-1);
+        navigate('/summary');
     };
 
     return (
         <S.Container>
             <MainHeader onLogout={onLogout} page="main_g" />
-
             <S.Page>
                 <S.BoxContainer>
                     <S.BoxHeader>
@@ -124,7 +124,6 @@ const ScriptPage = ({ onLogout }) => {
                         <S.PageSubTitle>생성된 대본을 확인하고 복사할 수 있습니다.</S.PageSubTitle>
                     </S.BoxHeader>
                 </S.BoxContainer>
-
                 <div ref={anchrRef1} style={{ height: '1px' }} />
                 <S.Main>
                     <S.Box showFull={!clickState}>
@@ -137,7 +136,6 @@ const ScriptPage = ({ onLogout }) => {
                             </S.TextBox>
                         </S.ScriptContainer>
                     </S.Box>
-
                     <S.FormActions>
                         {/* PDF 다운로드 버튼 */}
                         {status === "script" ? (
@@ -145,20 +143,18 @@ const ScriptPage = ({ onLogout }) => {
                         ) : (
                             <S.BtnSecondary onClick={handleDownloadPDF}>PDF 다운</S.BtnSecondary>
                         )}
-
                         {/* 복사하기 / 대본생성 버튼 */}
                         {status === "script" ? (
                             <S.BtnPrimary onClick={handleCopy}>복사하기</S.BtnPrimary>
                         ) : (
                             clickState ? (<S.BtnPrimary onClick={handleGenerateButtonClick}>접기</S.BtnPrimary>) : (<S.BtnPrimary onClick={handleGenerateButtonClick}>대본생성</S.BtnPrimary>)
                         )}
-
                         <S.BtnSecondary onClick={handleBack}>이전</S.BtnSecondary>
                     </S.FormActions>
                     <div ref={anchrRef2} style={{ height: '1px' }} />
+                    {/* 클릭 여부 따라 대본 데이터 입력창 접기/펼치기 */}
                     {clickState && <InputContainer summary="summary" info={script} />}
                 </S.Main>
-
                 <Footer />
             </S.Page>
         </S.Container>
